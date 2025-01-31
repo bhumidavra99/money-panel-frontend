@@ -190,7 +190,7 @@ const Offices = () => {
     <>
       <div className="flex flex-wrap justify-end gap-4">
         <button
-          className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#eb8844] hover:bg-opacity-90"
+          className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
           onClick={() => setModelOpen(true)}
         >
           <FaPlus className="font-bold text-white w-4 h-4" />
@@ -259,7 +259,7 @@ const Offices = () => {
                       </p>
                       <div className="mt-6">
                         <button
-                          className="px-6 py-3 bg-[#eb8844] text-white text-lg font-semibold rounded-md shadow-lg hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#eb8844] transition-all duration-300 ease-in-out transform hover:scale-105"
+                          className="px-6 py-3 bg-[#EB8844] text-white text-lg font-semibold rounded-md shadow-lg hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#EB8844] transition-all duration-300 ease-in-out transform hover:scale-105"
                           onClick={() => window.location.reload()}
                         >
                           Try Again

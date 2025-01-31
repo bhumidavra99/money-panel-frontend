@@ -35,16 +35,16 @@ const CustomerForm = ({ action }) => {
       borderColor: "#D1D5DB",
       boxShadow: "none",
       "&:hover": {
-        borderColor: "#eb8844",
+        borderColor: "#EB8844",
       },
     }),
     option: (provided, state) => ({
       ...provided,
-      backgroundColor: state.isSelected ? "#eb8844" : "white",
+      backgroundColor: state.isSelected ? "#EB8844" : "white",
       color: state.isSelected ? "white" : "#4B5563",
       cursor: "pointer",
       "&:hover": {
-        backgroundColor: state.isSelected ? "#eb8844" : "#fde5c1",
+        backgroundColor: state.isSelected ? "#EB8844" : "#fde5c1",
         color: state.isSelected ? "white" : "#4B5563",
       },
     }),
@@ -56,7 +56,7 @@ const CustomerForm = ({ action }) => {
       ...provided,
       color: "#4B5563",
       "&:hover": {
-        color: "#eb8844",
+        color: "#EB8844",
       },
     }),
   };
@@ -91,8 +91,7 @@ const CustomerForm = ({ action }) => {
     officeName: Yup.string().required("Office Name is required"),
     cardNumber: Yup.string()
       .required("Card Number is required")
-      .matches(/^(\d{4}[- ]?){3}\d{4}$/, "Please enter a valid Card Number")
-      .length(19, "Please enter a valid Card Number"),
+      .matches(/^(\d{4}[- ]?){3}\d{4}$/, "Please enter a valid Card Number"),
     bankName: Yup.string().required("Bank Name is required"),
     status: Yup.string().required("Status is required"),
   });
@@ -309,7 +308,7 @@ const CustomerForm = ({ action }) => {
                   Customer Name
                 </label>
                 <input
-                  className="w-full text-base p-2 mt-1 h-[40px] rounded-md border border-gray-400 focus:outline-none focus:border-[#eb8844]"
+                  className="w-full text-base p-2 mt-1 h-[40px] rounded-md border border-gray-400 focus:outline-none focus:border-[#EB8844]"
                   type="text"
                   placeholder="Enter Customer Name"
                   name="customerName"
@@ -329,7 +328,7 @@ const CustomerForm = ({ action }) => {
                 </label>
                 <Select
                   name="officeName"
-                  className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#eb8844]"
+                  className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#EB8844]"
                   value={officeNameOptions?.find(
                     (option) => option.value === values.officeName
                   )}
@@ -350,7 +349,7 @@ const CustomerForm = ({ action }) => {
                   Card Number
                 </label>
                 <input
-                  className="w-full text-base p-2 mt-1 h-[40px] rounded-md border border-gray-400 focus:outline-none focus:border-[#eb8844]"
+                  className="w-full text-base p-2 mt-1 h-[40px] rounded-md border border-gray-400 focus:outline-none focus:border-[#EB8844]"
                   type="text"
                   placeholder="Enter Card Number"
                   name="cardNumber"
@@ -379,7 +378,7 @@ const CustomerForm = ({ action }) => {
                   Bank Name
                 </label>
                 <input
-                  className="w-full text-base p-2 mt-1 h-[40px] rounded-md border border-gray-400 focus:outline-none focus:border-[#eb8844]"
+                  className="w-full text-base p-2 mt-1 h-[40px] rounded-md border border-gray-400 focus:outline-none focus:border-[#EB8844]"
                   type="text"
                   placeholder="Enter Bank Name"
                   name="bankName"
@@ -396,7 +395,7 @@ const CustomerForm = ({ action }) => {
                   Bill Amount
                 </label>
                 <input
-                  className="w-full text-base p-2 mt-1 h-[40px] rounded-md border border-gray-400 focus:outline-none focus:border-[#eb8844]"
+                  className="w-full text-base p-2 mt-1 h-[40px] rounded-md border border-gray-400 focus:outline-none focus:border-[#EB8844]"
                   type="number"
                   placeholder="Enter Bill Amount"
                   name="billAmount"
@@ -415,7 +414,7 @@ const CustomerForm = ({ action }) => {
                   Swipe Amount
                 </label>
                 <input
-                  className="w-full text-base p-2 mt-1 h-[40px] rounded-md border border-gray-400 focus:outline-none focus:border-[#eb8844]"
+                  className="w-full text-base p-2 mt-1 h-[40px] rounded-md border border-gray-400 focus:outline-none focus:border-[#EB8844]"
                   type="number"
                   placeholder="Enter Swipe Amount"
                   name="swipeAmount"
@@ -435,7 +434,7 @@ const CustomerForm = ({ action }) => {
                 </label>
                 <Select
                   name="paymentPortal"
-                  className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#eb8844]"
+                  className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#EB8844]"
                   value={paymentPortalOptions?.find(
                     (option) => option.value === values.paymentPortal
                   )}
@@ -457,7 +456,7 @@ const CustomerForm = ({ action }) => {
                 </label>
                 <Select
                   name="swipePortal"
-                  className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#eb8844]"
+                  className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#EB8844]"
                   value={swipePortalOptions?.find(
                     (option) => option.value === values.swipePortal
                   )}
@@ -487,7 +486,7 @@ const CustomerForm = ({ action }) => {
                     setFieldValue("chargeType", e ? e.value : "")
                   }
                   placeholder="Select Charge Type"
-                  className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#eb8844]"
+                  className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#EB8844]"
                   styles={customStyles}
                 />
               </div>
@@ -497,7 +496,7 @@ const CustomerForm = ({ action }) => {
                 </label>
                 <Select
                   name="chargeCardType"
-                  className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#eb8844]"
+                  className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#EB8844]"
                   value={chargeCardTypeOptions?.find(
                     (option) => option.value === values?.chargeCardType
                   )}
@@ -515,7 +514,7 @@ const CustomerForm = ({ action }) => {
                   Charge %
                 </label>
                 <input
-                  className="w-full text-base p-2 mt-1 h-[40px] rounded-md border border-gray-400 focus:outline-none focus:border-[#eb8844]"
+                  className="w-full text-base p-2 mt-1 h-[40px] rounded-md border border-gray-400 focus:outline-none focus:border-[#EB8844]"
                   type="number"
                   placeholder="Enter Charge %"
                   name="chargeInPer"
@@ -534,7 +533,7 @@ const CustomerForm = ({ action }) => {
                   Charge ₹
                 </label>
                 <input
-                  className="w-full text-base p-2 mt-1 h-[40px] rounded-md border border-gray-400 focus:outline-none focus:border-[#eb8844]"
+                  className="w-full text-base p-2 mt-1 h-[40px] rounded-md border border-gray-400 focus:outline-none focus:border-[#EB8844]"
                   type="number"
                   placeholder="Enter Charge ₹"
                   name="chargeInRupees"
@@ -548,7 +547,7 @@ const CustomerForm = ({ action }) => {
                   Extra Charge
                 </label>
                 <input
-                  className="w-full text-base p-2 mt-1 h-[40px] rounded-md border border-gray-400 focus:outline-none focus:border-[#eb8844]"
+                  className="w-full text-base p-2 mt-1 h-[40px] rounded-md border border-gray-400 focus:outline-none focus:border-[#EB8844]"
                   type="number"
                   placeholder="Enter Extra Charge"
                   name="extraCharge"
@@ -567,7 +566,7 @@ const CustomerForm = ({ action }) => {
                   Card Charge %
                 </label>
                 <input
-                  className="w-full text-base p-2 mt-1 h-[40px] rounded-md border border-gray-400 focus:outline-none focus:border-[#eb8844]"
+                  className="w-full text-base p-2 mt-1 h-[40px] rounded-md border border-gray-400 focus:outline-none focus:border-[#EB8844]"
                   type="number"
                   placeholder="Enter Card Charge"
                   name="cardChargeInPer"
@@ -586,7 +585,7 @@ const CustomerForm = ({ action }) => {
                   Card Charge ₹
                 </label>
                 <input
-                  className="w-full text-base p-2 mt-1 h-[40px] rounded-md border border-gray-400 focus:outline-none focus:border-[#eb8844]"
+                  className="w-full text-base p-2 mt-1 h-[40px] rounded-md border border-gray-400 focus:outline-none focus:border-[#EB8844]"
                   type="number"
                   placeholder="Enter Card Charge ₹"
                   name="cardChargeInRupees"
@@ -608,7 +607,7 @@ const CustomerForm = ({ action }) => {
                     Profit
                   </label>
                   <input
-                    className="w-full text-base p-2 mt-1 h-[40px] rounded-md border border-gray-400 focus:outline-none focus:border-[#eb8844]"
+                    className="w-full text-base p-2 mt-1 h-[40px] rounded-md border border-gray-400 focus:outline-none focus:border-[#EB8844]"
                     type="number"
                     placeholder="Enter Profit"
                     name="profit"
@@ -623,7 +622,7 @@ const CustomerForm = ({ action }) => {
                   </label>
                   <Select
                     name="status"
-                    className="w-full text-base mt-1 h-[40px]  rounded-md focus:border-[#eb8844]"
+                    className="w-full text-base mt-1 h-[40px]  rounded-md focus:border-[#EB8844]"
                     value={statusOptions?.find(
                       (option) => option.value === values?.status
                     )}
@@ -641,14 +640,14 @@ const CustomerForm = ({ action }) => {
             <div className="flex items-center justify-center mt-7 gap-5">
               <button
                 type="button"
-                className="w-[300px] h-[50px] flex justify-center items-center border border-[#eb8844] rounded-md text-[#eb8844]"
+                className="w-[300px] h-[50px] flex justify-center items-center border border-[#EB8844] rounded-md text-[#EB8844]"
                 onClick={() => navigate("/report")}
               >
                 <p className="font-semibold">Cancel</p>
               </button>
               <button
                 type="submit"
-                className="w-[300px] h-[50px] flex justify-center font-bold items-center text-white bg-[#eb8844] rounded-md hover:bg-[#eb8844]"
+                className="w-[300px] h-[50px] flex justify-center font-bold items-center text-white bg-[#EB8844] rounded-md hover:bg-[#EB8844]"
               >
                 {loading ? <div className="loader"></div> : "Save"}
               </button>

@@ -1,78 +1,70 @@
 import React, { useState } from "react";
 import { VscEye, VscEyeClosed } from "react-icons/vsc";
+import * as Yup from "yup";
+import { useFormik } from "formik";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { changePassword, useUser } from "../../redux/services/authSlice";
 
 const ChangePasswordPage = () => {
   const [toggle0, setToggle0] = useState(false);
   const [toggle1, setToggle1] = useState(false);
   const [toggle2, setToggle2] = useState(false);
+   const { user } = useUser();
   const [resetLoading, setResetLoading] = useState(false);
-  // const dispatch = useDispatch();
-  // const navigate = useNavigate();
-  // const { user } = useUser();
-  // const initialValues = {
-  //   userId: user._id,
-  //   oldPassword: "",
-  //   newPassword: "",
-  //   confirmPassword: "",
-  // };
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const initialValues = {
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  };
 
-  // const passwordRegex =
-  //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
+  const validationSchema = Yup.object({
+    oldPassword: Yup.string().required("Old password is required"),
+    newPassword: Yup.string().required("New password is required"),
+    confirmPassword: Yup.string().required("Confirm password is required"),
+  });
 
-  // const validationSchema = Yup.object({
-  //   oldPassword: Yup.string().required("Old password is required"),
-  //   newPassword: Yup.string()
-  //     .matches(
-  //       passwordRegex,
-  //       "Password must include uppercase, lowercase, number, and special character."
-  //     )
-  //     .min(8, "Password must be at least 8 characters long")
-  //     .required("New password is required"),
-  //   confirmPassword: Yup.string()
-  //     .oneOf([Yup.ref("newPassword"), null], "Passwords must match")
-  //     .required("Confirm password is required"),
-  // });
+  const onSubmit = async (values) => {
+    let payload = {
+      userId: user?._id,
+      oldPassword: values?.oldPassword,
+      newPassword: values?.newPassword,
+    };
+    setResetLoading(true);
+    try {
+      let response = await dispatch(changePassword(payload));
+      if (response?.payload?.status === 200) {
+        resetForm();
+        navigate("/dashboard");
+        toast.success(response.payload.message, {
+          autoClose: 2000,
+          pauseOnHover: false,
+        });
+      } else {
+      }
+    } catch (error) {
+    } finally {
+      setResetLoading(false);
+    }
+  };
 
-  // const onSubmit = async (values) => {
-  //   let payload = {
-  //     userId: values.userId,
-  //     oldPassword: values?.oldPassword,
-  //     newPassword: values?.newPassword,
-  //   };
-  //   setResetLoading(true);
-  //   try {
-  //     let response = await dispatch(changePassword(payload));
-  //     if (response?.status === 200) {
-  //       resetForm();
-  //       navigate("/");
-  //       toast.success(response.message, {
-  //         autoClose: 2000,
-  //         pauseOnHover: false,
-  //       });
-  //     } else {
-  //     }
-  //   } catch (error) {
-  //   } finally {
-  //     setResetLoading(false);
-  //   }
-  // };
+  const {
+    handleChange,
+    handleBlur,
+    values,
+    errors,
+    touched,
+    handleSubmit,
+    resetForm,
+  } = useFormik({
+    initialValues,
+    validationSchema,
+    onSubmit,
+  });
 
-  // const {
-  //   handleChange,
-  //   handleBlur,
-  //   values,
-  //   errors,
-  //   touched,
-  //   handleSubmit,
-  //   resetForm,
-  // } = useFormik({
-  //   initialValues,
-  //   validationSchema,
-  //   onSubmit,
-  // });
-const handleSubmit=()=>{
-
-}
   return (
     <div className="flex justify-center items-center h-full">
       <section className="space-y-6 max-w-[600px]">
@@ -96,9 +88,9 @@ const handleSubmit=()=>{
                   className="text-black text-md px-4 py-3 border-2 border-gray-200 w-full h-12 rounded-lg"
                   type={toggle0 ? "text" : "password"}
                   name="oldPassword"
-                  // value={values.oldPassword}
-                  // onChange={handleChange}
-                  // onBlur={handleBlur}
+                  value={values.oldPassword}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
                   placeholder="Enter old password"
                 />
                 <button
@@ -113,11 +105,11 @@ const handleSubmit=()=>{
                   )}
                 </button>
               </div>
-              {/* {errors.oldPassword && touched.oldPassword && (
+              {errors.oldPassword && touched.oldPassword && (
                 <p className="text-red-500 text-xs mt-1">
                   {errors.oldPassword}
                 </p>
-              )} */}
+              )}
             </div>
 
             <div className="px-4 mt-4">
@@ -129,9 +121,9 @@ const handleSubmit=()=>{
                   className="text-black text-md px-4 py-3 border-2 border-gray-200 w-full h-12 rounded-lg"
                   type={toggle1 ? "text" : "password"}
                   name="newPassword"
-                  // value={values.newPassword}
-                  // onChange={handleChange}
-                  // onBlur={handleBlur}
+                  value={values.newPassword}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
                   placeholder="Enter new password"
                 />
                 <button
@@ -146,11 +138,11 @@ const handleSubmit=()=>{
                   )}
                 </button>
               </div>
-              {/* {errors.newPassword && touched.newPassword && (
+              {errors.newPassword && touched.newPassword && (
                 <p className="text-red-500 text-xs mt-1">
                   {errors.newPassword}
                 </p>
-              )} */}
+              )}
             </div>
 
             <div className="px-4 mt-4">
@@ -162,9 +154,9 @@ const handleSubmit=()=>{
                   className="text-black text-md px-4 py-3 border-2 border-gray-200 w-full h-12 rounded-lg"
                   type={toggle2 ? "text" : "password"}
                   name="confirmPassword"
-                  // value={values.confirmPassword}
-                  // onChange={handleChange}
-                  // onBlur={handleBlur}
+                  value={values.confirmPassword}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
                   placeholder="Confirm new password"
                   autoComplete="off"
                 />
@@ -180,16 +172,16 @@ const handleSubmit=()=>{
                   )}
                 </button>
               </div>
-              {/* {errors.confirmPassword && touched.confirmPassword && (
+              {errors.confirmPassword && touched.confirmPassword && (
                 <p className="text-red-500 text-xs mt-1">
                   {errors.confirmPassword}
                 </p>
-              )} */}
+              )}
             </div>
             <div className="w-full flex items-end justify-center my-4">
               <button
                 type="submit"
-                className="flex items-center justify-center text-lg rounded-full w-[250px] h-[50px] text-md text-center text-white bg-[#eb8844] hover:bg-opacity-90"
+                className="flex items-center justify-center text-lg rounded-full w-[250px] h-[50px] text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
               >
                 {resetLoading ? (
                   <div className="loader"></div>

@@ -32,16 +32,16 @@ const Report = () => {
       borderColor: "#D1D5DB",
       boxShadow: "none",
       "&:hover": {
-        borderColor: "#eb8844",
+        borderColor: "#EB8844",
       },
     }),
     option: (provided, state) => ({
       ...provided,
-      backgroundColor: state.isSelected ? "#eb8844" : "white",
+      backgroundColor: state.isSelected ? "#EB8844" : "white",
       color: state.isSelected ? "white" : "#4B5563",
       cursor: "pointer",
       "&:hover": {
-        backgroundColor: state.isSelected ? "#eb8844" : "#fde5c1",
+        backgroundColor: state.isSelected ? "#EB8844" : "#fde5c1",
         color: state.isSelected ? "white" : "#4B5563",
       },
     }),
@@ -53,7 +53,7 @@ const Report = () => {
       ...provided,
       color: "#4B5563",
       "&:hover": {
-        color: "#eb8844",
+        color: "#EB8844",
       },
     }),
   };
@@ -422,7 +422,7 @@ const Report = () => {
       body: rows,
       theme: "grid",
       headStyles: {
-        fillColor: "#eb8844",
+        fillColor: "#EB8844",
         textColor: "#fff",
         fontStyle: "bold",
         cellPadding: 5,
@@ -507,7 +507,7 @@ const Report = () => {
           />
           <button
             type="button"
-            className="absolute top-0 right-0 px-4 h-full bg-[#eb8844] text-white rounded-r-lg"
+            className="absolute top-0 right-0 px-4 h-full bg-[#EB8844] text-white rounded-r-lg"
             onClick={() => setSearchData(searchTerm)}
           >
             <BiSearch />
@@ -516,7 +516,7 @@ const Report = () => {
         <div className="w-full sm:max-w-[200px]">
           <Select
             name="status"
-            className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#eb8844]"
+            className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#EB8844]"
             value={statusOptions?.find(
               (option) => option.value === filterValue
             )}
@@ -529,14 +529,14 @@ const Report = () => {
           {savedStartDate && savedEndDate && (
             <button
               onClick={handleClearDates}
-              className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#eb8844] hover:bg-opacity-90"
+              className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
             >
               Clear
             </button>
           )}
           <button
             onClick={() => setToggle(true)}
-            className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#eb8844] hover:bg-opacity-90"
+            className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
           >
             <FaRegCalendarAlt className="font-bold text-white w-4 h-4" />
             <p className="font-semibold">Select Date</p>
@@ -563,7 +563,7 @@ const Report = () => {
             <FaFileExcel color="green" size={28} />
           </div>
           <button
-            className="inline-flex items-center rounded-lg px-2 py-2 text-md text-center text-white bg-[#eb8844] hover:bg-opacity-90"
+            className="inline-flex items-center rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
             onClick={() => {
               setSwipeButton(true);
             }}
@@ -571,7 +571,7 @@ const Report = () => {
             <p className="font-semibold">Swipe Rate</p>
           </button>
           <button
-            className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#eb8844] hover:bg-opacity-90"
+            className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
             onClick={() => navigate("/add-customer")}
           >
             <FaPlus className="font-bold text-white w-4 h-4" />
@@ -640,7 +640,7 @@ const Report = () => {
                       </p>
                       <div className="mt-6">
                         <button
-                          className="px-6 py-3 bg-[#eb8844] text-white text-lg font-semibold rounded-md shadow-lg hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#eb8844] transition-all duration-300 ease-in-out transform hover:scale-105"
+                          className="px-6 py-3 bg-[#EB8844] text-white text-lg font-semibold rounded-md shadow-lg hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#EB8844] transition-all duration-300 ease-in-out transform hover:scale-105"
                           onClick={() => window.location.reload()}
                         >
                           Try Again

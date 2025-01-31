@@ -24,7 +24,7 @@ const Pagination = ({ pageCount, onPageChange }) => {
         pageClassName={
           "w-9 h-9 flex justify-center bg-white items-center border border-gray-300 hover:bg-gray-100 rounded-md text-gray-700  cursor-pointer pagination-link"
         }
-        activeClassName="!bg-[#eb8844] !text-white hover:!bg-[#eb8844] hover:!text-white active-pagination-link"
+        activeClassName="!bg-[#EB8844] !text-white hover:!bg-[#EB8844] hover:!text-white active-pagination-link"
         breakClassName={
           "w-9 h-9 flex justify-center items-center bg-white border border-gray-300 rounded-md text-gray-700 cursor-pointer pagination-link"
         }

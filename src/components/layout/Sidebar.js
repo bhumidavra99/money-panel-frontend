@@ -60,7 +60,7 @@ const Sidebar = ({ isOpen, setSidebarOpen }) => {
                     to={path}
                     className={`flex items-center gap-4 px-4 py-3 rounded-lg text-md font-medium transition-colors ${
                       isMainItemActive(path)
-                        ? "bg-[#eb8844] text-white hover:text-white"
+                        ? "bg-[#EB8844] text-white hover:text-white"
                         : "text-gray-700 hover:text-gray-900 hover:bg-orange-100"
                     }`}
                     onClick={(e) => {

@@ -83,14 +83,14 @@ const DateFilter = ({
               <button
                 onClick={onClose}
                 type="button"
-                className="max-w-[200px] w-full h-[45px] text-md font-medium text-[#eb8844] border border-[#eb8844] rounded-lg"
+                className="max-w-[200px] w-full h-[45px] text-md font-medium text-[#EB8844] border border-[#EB8844] rounded-lg"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDateSubmit}
                 type="button"
-                className="max-w-[200px] w-full h-[45px] text-md font-medium text-white bg-[#eb8844] border border-[#eb8844]  rounded-lg"
+                className="max-w-[200px] w-full h-[45px] text-md font-medium text-white bg-[#EB8844] border border-[#EB8844]  rounded-lg"
                 disabled={error || !startDate || !endDate}
               >
                 Save

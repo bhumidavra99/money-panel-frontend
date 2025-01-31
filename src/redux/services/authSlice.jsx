@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { apiInstance } from "./axiosApi";
 import { useSelector } from "react-redux";
 import { useMemo } from "react";
+import authHeader from "./authHeader";
 
 const getDefaultUser = () => {
     let user = localStorage.getItem("user");
@@ -19,6 +20,23 @@ export const login = createAsyncThunk(
     async (payload, { rejectWithValue }) => {
       try {
         const response = await apiInstance.post("/auth/login", payload);
+        return response;
+      } catch (err) {
+        return rejectWithValue(err?.response?.data?.message);
+      }
+    }
+  );
+  export const changePassword = createAsyncThunk(
+    "auth/changePassword",
+    async (payload, { rejectWithValue }) => {
+      try {
+        const response = await apiInstance.post(
+          "/auth/change-password",
+          payload,
+          {
+            headers: authHeader(),
+          }
+        );
         return response;
       } catch (err) {
         return rejectWithValue(err?.response?.data?.message);

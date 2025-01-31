@@ -54,7 +54,7 @@ const ChangeAmount = ({
             <div className="flex items-center justify-center mt-5 gap-5">
               <button
                 type="submit"
-                className="w-[150px] h-[50px] flex justify-center items-center text-white bg-[#eb8844] rounded-md hover:bg-[#eb8844]"
+                className="w-[150px] h-[50px] flex justify-center items-center text-white bg-[#EB8844] rounded-md hover:bg-[#EB8844]"
               >
                 Save
               </button>

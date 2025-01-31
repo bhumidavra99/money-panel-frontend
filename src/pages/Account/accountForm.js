@@ -68,14 +68,14 @@ const AccountForm = ({
           <div className="flex items-center justify-center mt-5 gap-5">
             <button
               type="button"
-              className="w-[150px] h-[50px] flex justify-center items-center border border-[#eb8844] rounded-md text-[#eb8844]"
+              className="w-[150px] h-[50px] flex justify-center items-center border border-[#EB8844] rounded-md text-[#EB8844]"
               onClick={onClose}
             >
               <p className="font-semibold">Cancel</p>
             </button>
             <button
               type="submit"
-              className="w-[150px] h-[50px] flex justify-center items-center text-white bg-[#eb8844] rounded-md hover:bg-[#eb8844]"
+              className="w-[150px] h-[50px] flex justify-center items-center text-white bg-[#EB8844] rounded-md hover:bg-[#EB8844]"
             >
               {loading ? <div className="loader"></div> : "Save"}
             </button>

@@ -138,143 +138,167 @@ const Dashboard = () => {
     getAllDashboardData();
   }, [getAllDashboardData]);
   return (
-    <div className="md:p-6 p-3 bg-gray-50 min-h-screen">
-      <h2 className="text-2xl font-bold">Transactions</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-x-7 gap-x-4 gap-y-4 mb-8 mt-2">
-        <div className="flex items-center gap-6 bg-white border border-[#DBE0E6] rounded-lg py-4 px-8">
-          <div className="bg-[#FFF7F0] p-3 rounded-full">
-            <img src={money} alt="" className="h-10 w-10" />
-          </div>
-          <div>
-            <h2 className="text-2xl font-bold text-gray-800">
-              ₹ {dashboardData?.transactions?.total}
-            </h2>
-            <p className="text-sm text-gray-500">Total Transaction</p>
-          </div>
-        </div>
-
-        {dashboardData?.transactions?.offices?.map((office, i) => (
-          <div
-            className="flex items-center gap-6 bg-white border border-[#DBE0E6] rounded-lg py-4 px-8"
-            key={i}
-          >
-            <div className="bg-[#FFF7F0] p-3 rounded-full">
-              <img src={money} alt="" className="h-10 w-10" />
+    <div className="md:p-6 p-3 bg-gray-50 min-h-[calc(100vh-120px)] h-full">
+      { (dashboardData?.transactions?.offices.length > 0 || dashboardData?.profit?.offices.length > 0) ?
+        <>
+          <h2 className="text-2xl font-bold">Transactions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-x-7 gap-x-4 gap-y-4 mb-8 mt-2">
+            <div className="flex items-center gap-6 bg-white border border-[#DBE0E6] rounded-lg py-4 px-8">
+              <div className="bg-[#FFF7F0] p-3 rounded-full">
+                <img src={money} alt="" className="h-10 w-10" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-800">
+                  ₹ {dashboardData?.transactions?.total}
+                </h2>
+                <p className="text-sm text-gray-500">Total Transaction</p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-2xl font-bold text-gray-800">
-                ₹ {office?.transaction}
-              </h2>
-              <p className="text-sm text-gray-500">{office?.officeName}</p>
+
+            {dashboardData?.transactions?.offices?.map((office, i) => (
+              <div
+                className="flex items-center gap-6 bg-white border border-[#DBE0E6] rounded-lg py-4 px-8"
+                key={i}
+              >
+                <div className="bg-[#FFF7F0] p-3 rounded-full">
+                  <img src={money} alt="" className="h-10 w-10" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-800">
+                    ₹ {office?.transaction}
+                  </h2>
+                  <p className="text-sm text-gray-500">{office?.officeName}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="bg-white shadow rounded-lg p-6">
+            <div className="flex flex-col md:flex-row items-end justify-end mb-4 gap-1 md:gap-3">
+              {savedStartDate && savedEndDate && (
+                <button
+                  onClick={handleClearDates}
+                  className="flex items-center justify-end space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
+                >
+                  Clear
+                </button>
+              )}
+              <button
+                onClick={() => setToggle(true)}
+                className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
+              >
+                <FaRegCalendarAlt className="font-bold text-white w-4 h-4" />
+                {savedStartDate && savedEndDate ? (
+                  <p>
+                    (
+                    {`${moment(savedStartDate).format("Do MMMM")} - ${moment(
+                      savedEndDate
+                    ).format("Do MMMM")}`}
+                    )
+                  </p>
+                ) : (
+                  <p className="font-semibold">Select Date</p>
+                )}
+              </button>
+            </div>
+            <div className="lg:max-h-[500px] w-full flex justify-center">
+              {chartsData && <Bar data={chartsData} options={chartOptions} />}
             </div>
           </div>
-        ))}
-      </div>
+          <h2 className="text-2xl font-bold mt-6">Profit</h2>
 
-      <div className="bg-white shadow rounded-lg p-6">
-        <div className="flex flex-col md:flex-row items-end justify-end mb-4 gap-1 md:gap-3">
-          {savedStartDate && savedEndDate && (
-            <button
-              onClick={handleClearDates}
-              className="flex items-center justify-end space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#eb8844] hover:bg-opacity-90"
-            >
-              Clear
-            </button>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-x-7 gap-x-4 gap-y-4 mb-8 mt-2">
+            <div className="flex items-center gap-6 bg-white border border-[#DBE0E6] rounded-lg py-4 px-8">
+              <div className="bg-[#FFF7F0] p-3 rounded-full">
+                <img src={money} alt="" className="h-10 w-10" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-800">
+                  ₹ {dashboardData?.profit?.total}
+                </h2>
+                <p className="text-sm text-gray-500">Total Profit</p>
+              </div>
+            </div>
+
+            {dashboardData?.profit?.offices?.map((office, i) => (
+              <div
+                className="flex items-center gap-6 bg-white border border-[#DBE0E6] rounded-lg py-4 px-8"
+                key={i}
+              >
+                <div className="bg-[#FFF7F0] p-3 rounded-full">
+                  <img src={money} alt="" className="h-10 w-10" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-800">
+                    ₹ {office?.profit}
+                  </h2>
+                  <p className="text-sm text-gray-500">{office?.officeName}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="bg-white shadow rounded-lg p-6">
+            <div className="flex items-center justify-end mb-4">
+              <button
+                onClick={() => setToggle(true)}
+                className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
+              >
+                <FaRegCalendarAlt className="font-bold text-white w-4 h-4" />
+                <p className="font-semibold">Select Date</p>
+                {savedStartDate && savedEndDate && (
+                  <p>
+                    (
+                    {`${moment(savedStartDate).format("Do MMMM")} - ${moment(
+                      savedEndDate
+                    ).format("Do MMMM")}`}
+                    )
+                  </p>
+                )}
+              </button>
+            </div>
+            <div className="lg:max-h-[500px] w-full flex justify-center">
+              {profitChartsData && (
+                <Bar data={profitChartsData} options={chartOptions} />
+              )}
+            </div>
+          </div>
+          {toggle && (
+            <DateFilter
+              setToggle={setToggle}
+              toggle={toggle}
+              setStartDate={setStartDate}
+              setEndDate={setEndDate}
+              handleDateSubmit={handleSaveDate}
+              startDate={startDate}
+              endDate={endDate}
+              onClose={() => {
+                setToggle(false);
+                handleClearDates();
+              }}
+            />
           )}
-          <button
-            onClick={() => setToggle(true)}
-            className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#eb8844] hover:bg-opacity-90"
-          >
-            <FaRegCalendarAlt className="font-bold text-white w-4 h-4" />
-            {savedStartDate && savedEndDate ? (
-            
-              <p>
-                (
-                {`${moment(savedStartDate).format("Do MMMM")} - ${moment(
-                  savedEndDate
-                ).format("Do MMMM")}`}
-                )
-              </p>
-            ):<p className="font-semibold">Select Date</p>}
-          </button>
-        </div>
-        <div className="lg:h-[500px] w-full flex justify-center">
-          {chartsData && <Bar data={chartsData} options={chartOptions} />}
-        </div>
-      </div>
-      <h2 className="text-2xl font-bold mt-6">Profit</h2>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-x-7 gap-x-4 gap-y-4 mb-8 mt-2">
-        <div className="flex items-center gap-6 bg-white border border-[#DBE0E6] rounded-lg py-4 px-8">
-          <div className="bg-[#FFF7F0] p-3 rounded-full">
-            <img src={money} alt="" className="h-10 w-10" />
-          </div>
-          <div>
-            <h2 className="text-2xl font-bold text-gray-800">
-              ₹ {dashboardData?.profit?.total}
-            </h2>
-            <p className="text-sm text-gray-500">Total Profit</p>
-          </div>
-        </div>
-
-        {dashboardData?.profit?.offices?.map((office, i) => (
-          <div
-            className="flex items-center gap-6 bg-white border border-[#DBE0E6] rounded-lg py-4 px-8"
-            key={i}
-          >
-            <div className="bg-[#FFF7F0] p-3 rounded-full">
-              <img src={money} alt="" className="h-10 w-10" />
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold text-gray-800">
-                ₹ {office?.profit}
-              </h2>
-              <p className="text-sm text-gray-500">{office?.officeName}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="bg-white shadow rounded-lg p-6">
-        <div className="flex items-center justify-end mb-4">
-          <button
-            onClick={() => setToggle(true)}
-            className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#eb8844] hover:bg-opacity-90"
-          >
-            <FaRegCalendarAlt className="font-bold text-white w-4 h-4" />
-            <p className="font-semibold">Select Date</p>
-            {savedStartDate && savedEndDate && (
-              <p>
-                (
-                {`${moment(savedStartDate).format("Do MMMM")} - ${moment(
-                  savedEndDate
-                ).format("Do MMMM")}`}
-                )
-              </p>
-            )}
-          </button>
-        </div>
-        <div className="lg:h-[500px] w-full flex justify-center">
-          {profitChartsData && (
-            <Bar data={profitChartsData} options={chartOptions} />
-          )}
-        </div>
-      </div>
-      {toggle && (
-        <DateFilter
-          setToggle={setToggle}
-          toggle={toggle}
-          setStartDate={setStartDate}
-          setEndDate={setEndDate}
-          handleDateSubmit={handleSaveDate}
-          startDate={startDate}
-          endDate={endDate}
-          onClose={() => {
-            setToggle(false);
-            handleClearDates();
-          }}
-        />
-      )}
+        </>:
+         <div className="flex items-center justify-center p-4 w-full h-full">
+         <div className="text-center animate__animated animate__fadeIn animate__delay-1s">
+           <h2 className="text-3xl font-bold text-gray-900  mb-4">
+             No Data Found
+           </h2>
+           <p className="text-md text-gray-600 mb-6">
+             Unfortunately, we couldn't find any results matching
+             your search.
+           </p>
+           <div className="mt-6">
+             <button
+               className="px-6 py-3 bg-[#EB8844] text-white text-lg font-semibold rounded-md shadow-lg hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#EB8844] transition-all duration-300 ease-in-out transform hover:scale-105"
+               onClick={() => window.location.reload()}
+             >
+               Try Again
+             </button>
+           </div>
+         </div>
+       </div>
+      }
     </div>
   );
 };

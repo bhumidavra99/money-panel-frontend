@@ -82,7 +82,7 @@ function LogoutConfimation({ onLogout, onCancel }) {
               <button
                 type="button"
                 onClick={onLogout}
-                className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[#eb8844] text-base font-medium text-white  sm:ml-3 sm:w-auto sm:text-sm"
+                className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[#EB8844] text-base font-medium text-white  sm:ml-3 sm:w-auto sm:text-sm"
               >
                 Yes, I'm sure
               </button>

@@ -110,7 +110,7 @@ const Navbar = ({ toggleSidebar }) => {
           </button>
         </div>
         <div className="flex justify-end">
-          <div className="w-[200px] text-white bg-[#eb8844] flex justify-center items-center text-lg font-bold">
+          <div className="w-[200px] text-white bg-[#EB8844] flex justify-center items-center text-lg font-bold">
             ₹ {getAmountData?.amount}
           </div>
           <div className="items-center gap-x-3 flex px-4">
@@ -164,7 +164,7 @@ const Navbar = ({ toggleSidebar }) => {
                           type="button"
                           className={`${
                             pathname === "/change-password"
-                              ? "text-white bg-[#eb8844]"
+                              ? "text-white bg-[#EB8844]"
                               : "text-black"
                           } py-2 px-4 w-full hover:text-black hover:bg-[#fde5c1] rounded-md`}
                         >
