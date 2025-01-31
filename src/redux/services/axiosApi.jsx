@@ -2,7 +2,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 export const apiInstance = axios.create({
-  baseURL: process.env.REACT_APP_BASE1_URL || process.env.REACT_APP_BASE_URL,
+  baseURL: process.env.REACT_APP_BASE_URL,
 });
 apiInstance.interceptors.response.use(
   (response) => response.data,
