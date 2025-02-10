@@ -11,6 +11,8 @@ const Sidebar = ({ isOpen, setSidebarOpen }) => {
     { label: "Add Customer", path: "/add-customer" },
     { label: "Account", path: "/account" },
     { label: "Expenses", path: "/expenses" },
+    { label: "Debit", path: "/debit" },
+    { label: "Credit", path: "/credit" },
   ];
   const sidebarRef = useRef(null);
   const { pathname } = useLocation();

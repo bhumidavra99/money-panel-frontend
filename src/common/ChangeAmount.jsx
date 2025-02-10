@@ -43,6 +43,11 @@ const ChangeAmount = ({
                   value={values?.amount}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  onWheel={(e) => e.target.blur()}
+                  onKeyDown={(e) =>
+                    ["ArrowUp", "ArrowDown"].includes(e.key) &&
+                    e.preventDefault()
+                  }
                 />
                 {touched.officeName && errors.officeName && (
                   <div className="text-red-500 text-sm">

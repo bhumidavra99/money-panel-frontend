@@ -12,6 +12,7 @@ import Portals from "../pages/Portal";
 import Account from "../pages/Account";
 import EditCustomer from "../pages/Report/editCustomer";
 import Expense from "../pages/Expense";
+import Debit from "../pages/Debit";
 
 const Allroutes = () => {
   const { user } = useUser();
@@ -30,6 +31,8 @@ const Allroutes = () => {
             <Route path="/offices" element={<Offices />} />
             <Route path="/account" element={<Account />} />
             <Route path="/expenses" element={<Expense />} />
+            <Route path="/debit" element={<Debit />} />
+            <Route path="/credit" element={<Expense />} />
             <Route path="/change-password" element={<ChangePasswordPage />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Route>

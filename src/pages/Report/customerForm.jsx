@@ -14,6 +14,7 @@ import { getOffices } from "../../redux/services/officeSlice";
 import { getPortals } from "../../redux/services/portalSlice";
 import { getAccounts } from "../../redux/services/accountSlice";
 import { getBetweenAmount } from "../../redux/services/betweenAmountSlice";
+import { customStyles } from "../../common/select-custom-style";
 
 const CustomerForm = ({ action }) => {
   const dispatch = useDispatch();
@@ -28,38 +29,7 @@ const CustomerForm = ({ action }) => {
     (state) => state.report.singleCustomerData
   );
   const [loading, setLoading] = useState(false);
-  const customStyles = {
-    control: (provided) => ({
-      ...provided,
-      borderRadius: "0.375rem",
-      borderColor: "#D1D5DB",
-      boxShadow: "none",
-      "&:hover": {
-        borderColor: "#EB8844",
-      },
-    }),
-    option: (provided, state) => ({
-      ...provided,
-      backgroundColor: state.isSelected ? "#EB8844" : "white",
-      color: state.isSelected ? "white" : "#4B5563",
-      cursor: "pointer",
-      "&:hover": {
-        backgroundColor: state.isSelected ? "#EB8844" : "#fde5c1",
-        color: state.isSelected ? "white" : "#4B5563",
-      },
-    }),
-    singleValue: (provided) => ({
-      ...provided,
-      color: "#4B5563",
-    }),
-    dropdownIndicator: (provided) => ({
-      ...provided,
-      color: "#4B5563",
-      "&:hover": {
-        color: "#EB8844",
-      },
-    }),
-  };
+
   useEffect(() => {
     dispatch(getAccounts());
     dispatch(getOffices());
@@ -90,8 +60,8 @@ const CustomerForm = ({ action }) => {
     customerName: Yup.string().required("Customer Name is required"),
     officeName: Yup.string().required("Office Name is required"),
     cardNumber: Yup.string()
-      .required("Card Number is required")
-      .matches(/^(\d{4}[- ]?){3}\d{4}$/, "Please enter a valid Card Number"),
+    .required("Card Number is required")
+    .matches(/^(\d{4}[- ]?){1,3}\d{1,4}$/, "Please enter a valid Card Number"),
     bankName: Yup.string().required("Bank Name is required"),
     status: Yup.string().required("Status is required"),
   });
@@ -99,7 +69,7 @@ const CustomerForm = ({ action }) => {
   const onSubmit = async () => {
     setLoading(true);
     const filteredValues = Object.fromEntries(
-      Object.entries(values).filter(([key, value]) => value !== "")
+      Object.entries(values).filter(([_, value]) => value !== "")
     );
   
     const payload = { ...filteredValues };
@@ -292,7 +262,6 @@ const CustomerForm = ({ action }) => {
     const formattedValue = cleanedValue.replace(/(\d{4})(?=\d)/g, "$1 ");
     return formattedValue;
   };
-  console.log('values', values)
   return (
     <div>
       <section className="bg-white rounded-lg border-2 border-slate-300 font-sans duration-300 ease-in-out md:m-4 m-2">
@@ -402,6 +371,11 @@ const CustomerForm = ({ action }) => {
                   value={values.billAmount}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  onWheel={(e) => e.target.blur()}
+                  onKeyDown={(e) =>
+                    ["ArrowUp", "ArrowDown"].includes(e.key) &&
+                    e.preventDefault()
+                  }
                 />
                 {touched.billAmount && errors.billAmount && (
                   <div className="text-red-500 text-sm">
@@ -421,6 +395,11 @@ const CustomerForm = ({ action }) => {
                   value={values.swipeAmount}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  onWheel={(e) => e.target.blur()}
+                  onKeyDown={(e) =>
+                    ["ArrowUp", "ArrowDown"].includes(e.key) &&
+                    e.preventDefault()
+                  }
                 />
                 {touched.swipeAmount && errors.swipeAmount && (
                   <div className="text-red-500 text-sm">
@@ -521,6 +500,11 @@ const CustomerForm = ({ action }) => {
                   value={values.chargeInPer}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                 onWheel={(e) => e.target.blur()}
+                    onKeyDown={(e) =>
+                      ["ArrowUp", "ArrowDown"].includes(e.key) &&
+                      e.preventDefault()
+                    }
                 />
                 {touched.chargeInPer && errors.chargeInPer && (
                   <div className="text-red-500 text-sm">
@@ -540,6 +524,11 @@ const CustomerForm = ({ action }) => {
                   value={values.chargeInRupees}
                   readOnly
                   onBlur={handleBlur}
+                 onWheel={(e) => e.target.blur()}
+                    onKeyDown={(e) =>
+                      ["ArrowUp", "ArrowDown"].includes(e.key) &&
+                      e.preventDefault()
+                    }
                 />
               </div>
               <div>
@@ -554,6 +543,11 @@ const CustomerForm = ({ action }) => {
                   value={values.extraCharge}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                 onWheel={(e) => e.target.blur()}
+                    onKeyDown={(e) =>
+                      ["ArrowUp", "ArrowDown"].includes(e.key) &&
+                      e.preventDefault()
+                    }
                 />
                 {touched.extraCharge && errors.extraCharge && (
                   <div className="text-red-500 text-sm">
@@ -573,6 +567,11 @@ const CustomerForm = ({ action }) => {
                   readOnly
                   value={values.cardChargeInPer}
                   onBlur={handleBlur}
+                 onWheel={(e) => e.target.blur()}
+                    onKeyDown={(e) =>
+                      ["ArrowUp", "ArrowDown"].includes(e.key) &&
+                      e.preventDefault()
+                    }
                 />
                 {touched.cardChargeInPer && errors.cardChargeInPer && (
                   <div className="text-red-500 text-sm">
@@ -592,6 +591,11 @@ const CustomerForm = ({ action }) => {
                   value={values.cardChargeInRupees}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                 onWheel={(e) => e.target.blur()}
+                    onKeyDown={(e) =>
+                      ["ArrowUp", "ArrowDown"].includes(e.key) &&
+                      e.preventDefault()
+                    }
                 />
                 {touched.cardChargeInRupees && errors.cardChargeInRupees && (
                   <div className="text-red-500 text-sm">
@@ -614,6 +618,11 @@ const CustomerForm = ({ action }) => {
                     value={values.profit ? values.profit.toFixed(2) : ''}
                     readOnly
                     onBlur={handleBlur}
+                   onWheel={(e) => e.target.blur()}
+                    onKeyDown={(e) =>
+                      ["ArrowUp", "ArrowDown"].includes(e.key) &&
+                      e.preventDefault()
+                    }
                   />
                 </div>
                 <div className="w-full md:max-w-[400px]">

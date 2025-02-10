@@ -27,7 +27,7 @@ const DefaultLayout = () => {
           </div>
         <div className="flex">
           <main
-            className={`flex-1 overflow-y-auto md:px-6 px-4 my-4 relative lg:ml-72 md:h-[calc(100vh-110px)] h-[calc(100vh-120px)] transition-opacity duration-300 md:pb-0 ${
+            className={`flex-1 overflow-y-auto md:px-6 px-4 my-4 relative lg:ml-72 md:min-h-[calc(100vh-110px)] min-h-[calc(100vh-120px)] transition-opacity duration-300 md:pb-0 ${
               isSidebarOpen ? "opacity-50" : "opacity-100"
             }`}
           >

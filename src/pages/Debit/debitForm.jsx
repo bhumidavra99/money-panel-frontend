@@ -1,9 +1,7 @@
 import React from "react";
 import { TfiClose } from "react-icons/tfi";
-import Select from "react-select";
-import { customStyles } from "../../common/select-custom-style";
 
-const ExpenseForm = ({
+const DebitForm = ({
   onClose,
   values,
   handleChange,
@@ -13,8 +11,6 @@ const ExpenseForm = ({
   touched,
   handleSubmit,
   loading,
-  accountOptions,
-  setFieldValue,
 }) => {
   return (
     <div>
@@ -27,7 +23,7 @@ const ExpenseForm = ({
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold mb-0">{`${
               editId ? "Edit" : "Add"
-            } Expense`}</h2>
+            } Debit`}</h2>
             <button
               onClick={onClose}
               className="text-gray-500 hover:text-gray-800"
@@ -38,46 +34,23 @@ const ExpenseForm = ({
           <hr className="my-3" />
 
           <form onSubmit={handleSubmit}>
-            <div className="w-full space-y-5">
+            <div className="grid md:grid-cols-2 grid-cols-1 w-full gap-4">
               <div>
                 <label className="capitalize text-base font-medium text-gray-700">
-                  Account Name
-                </label>
-                <Select
-                  name="swipePortal"
-                  className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#EB8844]"
-                  value={accountOptions?.find(
-                    (option) => option.value === values.accountName
-                  )}
-                  onChange={(e) =>
-                    setFieldValue("accountName", e ? e.value : "")
-                  }
-                  options={accountOptions}
-                  styles={customStyles}
-                  maxMenuHeight={200}
-                />
-                {touched.accountName && errors.accountName && (
-                  <div className="text-red-500 text-sm">
-                    {errors.accountName}
-                  </div>
-                )}
-              </div>
-              <div>
-                <label className="capitalize text-base font-medium text-gray-700">
-                  Expense Title
+                  Customer Name
                 </label>
                 <input
                   className="w-full text-base p-2 rounded-md border border-gray-400 focus:outline-none focus:border-indigo-500"
                   type="text"
-                  placeholder="Enter Expense Title"
-                  name="expenseTitle"
-                  value={values.expenseTitle}
+                  placeholder="Enter Customer Name"
+                  name="cusName"
+                  value={values.cusName}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
-                {touched.expenseTitle && errors.expenseTitle && (
+                {touched.cusName && errors.cusName && (
                   <div className="text-red-500 text-sm">
-                    {errors.expenseTitle}
+                    {errors.cusName}
                   </div>
                 )}
               </div>
@@ -100,11 +73,13 @@ const ExpenseForm = ({
                   }
                 />
                 {touched.amount && errors.amount && (
-                  <div className="text-red-500 text-sm">{errors.amount}</div>
+                  <div className="text-red-500 text-sm">
+                    {errors.amount}
+                  </div>
                 )}
               </div>
             </div>
-            <div className="flex items-center justify-center mt-8 gap-5">
+            <div className="flex items-center justify-center mt-5 gap-5">
               <button
                 type="button"
                 className="w-[150px] h-[50px] flex justify-center items-center border border-[#EB8844] rounded-md text-[#EB8844]"
@@ -114,7 +89,7 @@ const ExpenseForm = ({
               </button>
               <button
                 type="submit"
-                className="w-[150px] h-[50px] flex justify-center items-center text-white bg-[#EB8844] rounded-md hover:bg-[#EB8844]"
+                className="w-[150px] h-[50px] font-bold flex justify-center items-center text-white bg-[#EB8844] rounded-md hover:bg-[#EB8844]"
               >
                 {loading ? <div className="loader"></div> : "Save"}
               </button>
@@ -126,4 +101,4 @@ const ExpenseForm = ({
   );
 };
 
-export default ExpenseForm;
+export default DebitForm

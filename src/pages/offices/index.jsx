@@ -1,5 +1,4 @@
 import React, { useState, useMemo, useCallback, useEffect } from "react";
-import { useTable, useSortBy } from "react-table";
 import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
 import "react-datepicker/dist/react-datepicker.css";
 import ConfirmationPage from "../../common/ConfirmationPage";
@@ -15,6 +14,8 @@ import {
   getSingleOffice,
 } from "../../redux/services/officeSlice";
 import { toast } from "react-toastify";
+import Loader from "../../common/Loader";
+import Table from "../../common/Table";
 
 const Offices = () => {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ const Offices = () => {
   const [modelOpen, setModelOpen] = useState(false);
   const [editId, setEditId] = useState();
   const [loading, setLoading] = useState(false);
+  const [pageLoading, setPageLoading] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [confirm, setConfirm] = useState(false);
   const columns = useMemo(
@@ -37,14 +39,17 @@ const Offices = () => {
       {
         Header: "Office Name",
         accessor: "officeName",
+        Cell: ({ value }) => (value ? value : "-"),
       },
       {
         Header: "Transaction",
         accessor: "transactions",
+        Cell: ({ value }) => (value ? value : "-"),
       },
       {
         Header: "Profit",
         accessor: "profit",
+        Cell: ({ value }) => (value ? value.toFixed(2) : "-"),
       },
 
       {
@@ -80,16 +85,6 @@ const Offices = () => {
   const data = useMemo(() => {
     return getAllOfficesData || [];
   }, [getAllOfficesData]);
-
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable(
-      {
-        columns,
-        data,
-      },
-      useSortBy
-    );
-
   const initialValues = {
     marchantName: "",
     normalCard: "",
@@ -101,14 +96,16 @@ const Offices = () => {
     officeName: Yup.string().required("Office Name  is required"),
   });
   const getAllOffice = useCallback(async () => {
-    setLoading(true);
+    setPageLoading(true);
     try {
       const response = await dispatch(getOffices());
       if (response?.payload?.status === 200) {
-        setLoading(false);
+        setPageLoading(false);
       }
     } catch (error) {
-      setLoading(false);
+      setPageLoading(false);
+    } finally {
+      setPageLoading(false);
     }
   }, [dispatch]);
   useEffect(() => {
@@ -186,6 +183,9 @@ const Offices = () => {
       fetchSingleOffice();
     }
   }, [dispatch, editId]);
+  if (pageLoading) {
+    return <Loader />;
+  }
   return (
     <>
       <div className="flex flex-wrap justify-end gap-4">
@@ -197,82 +197,10 @@ const Offices = () => {
           <p className="font-semibold">Add New Office</p>
         </button>
       </div>
-
-      <div className="overflow-x-auto bg-white rounded-lg shadow-md mt-4">
-        <table
-          {...getTableProps()}
-          className="min-w-full bg-white border-collapse"
-        >
-          <thead className="bg-gray-200">
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  <th
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className="px-6 py-4  text-sm whitespace-nowrap text-center font-bold text-gray-700 uppercase tracking-wider"
-                  >
-                    {column.render("Header")}
-                    <span>
-                      {column.isSorted
-                        ? column.isSortedDesc
-                          ? " 🔽"
-                          : " 🔼"
-                        : ""}
-                    </span>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-
-          <tbody {...getTableBodyProps()} className="divide-y divide-gray-200">
-            {rows?.length > 0 ? (
-              rows.map((row) => {
-                prepareRow(row);
-                return (
-                  <tr {...row.getRowProps()} className="hover:bg-gray-100">
-                    {row.cells.map((cell) => (
-                      <td
-                        {...cell.getCellProps()}
-                        className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700"
-                      >
-                        {cell.render("Cell")}
-                      </td>
-                    ))}
-                  </tr>
-                );
-              })
-            ) : (
-              <tr>
-                <td
-                  colSpan={headerGroups[0].headers?.length}
-                  className="p-4 text-center"
-                >
-                  <div className="flex items-center justify-center p-4 w-ful">
-                    <div className="text-center animate__animated animate__fadeIn animate__delay-1s">
-                      <h2 className="text-3xl font-bold text-gray-900  mb-4">
-                        No Data Found
-                      </h2>
-                      <p className="text-md text-gray-600 mb-6">
-                        Unfortunately, we couldn't find any results matching
-                        your search.
-                      </p>
-                      <div className="mt-6">
-                        <button
-                          className="px-6 py-3 bg-[#EB8844] text-white text-lg font-semibold rounded-md shadow-lg hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#EB8844] transition-all duration-300 ease-in-out transform hover:scale-105"
-                          onClick={() => window.location.reload()}
-                        >
-                          Try Again
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <Table
+        data={data}
+        columns={columns}
+      />
       {confirm && (
         <ConfirmationPage
           topicName="Office"

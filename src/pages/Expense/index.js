@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
-import { useTable, useSortBy } from "react-table";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +14,8 @@ import {
 } from "../../redux/services/expenseSlice";
 import { getAccounts } from "../../redux/services/accountSlice";
 import ExpenseForm from "./expenseForm";
+import Loader from "../../common/Loader";
+import Table from "../../common/Table";
 
 const Expense = () => {
   const dispatch = useDispatch();
@@ -26,6 +27,7 @@ const Expense = () => {
   const [modelOpen, setModelOpen] = useState(false);
   const [editId, setEditId] = useState();
   const [loading, setLoading] = useState(false);
+  const [pageLoading, setPageLoading] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [confirm, setConfirm] = useState(false);
   const initialValues = {
@@ -46,14 +48,16 @@ const Expense = () => {
     label: item.accountName,
   }));
   const getAllExpense = useCallback(async () => {
-    setLoading(true);
+    setPageLoading(true);
     try {
       const response = await dispatch(getExpenses());
       if (response?.payload?.status === 200) {
-        setLoading(false);
+        setPageLoading(false);
       }
     } catch (error) {
-      setLoading(false);
+      setPageLoading(false);
+    }finally {
+      setPageLoading(false);
     }
   }, [dispatch]);
   useEffect(() => {
@@ -159,8 +163,6 @@ const Expense = () => {
     validationSchema,
     onSubmit,
   });
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data }, useSortBy);
   useEffect(() => {
     if (getSingleExpenseData) {
       setValues({
@@ -192,6 +194,9 @@ const Expense = () => {
       fetchSingleExpense();
     }
   }, [dispatch, editId]);
+  if (pageLoading) {
+    return <Loader />;
+  }
   return (
     <div className="p-6 bg-gray-50 min-h-[calc(100vh-120px)] h-full">
       <div className="flex justify-end mb-4 gap-5">
@@ -203,81 +208,10 @@ const Expense = () => {
           <p className="font-semibold">Add New Expense</p>
         </button>
       </div>
-      <div className="overflow-x-auto bg-white rounded-lg shadow-md">
-        <table
-          {...getTableProps()}
-          className="min-w-full bg-white border-collapse"
-        >
-          <thead className="bg-gray-200">
-            {headerGroups?.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers?.map((column) => (
-                  <th
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className="px-6 py-4 whitespace-nowrap text-sm text-center font-bold text-gray-700 uppercase tracking-wider"
-                  >
-                    {column.render("Header")}
-                    <span>
-                      {column.isSorted
-                        ? column.isSortedDesc
-                          ? " 🔽"
-                          : " 🔼"
-                        : ""}
-                    </span>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-
-          <tbody {...getTableBodyProps()} className="divide-y divide-gray-200">
-            {rows?.length > 0 ? (
-              rows?.map((row) => {
-                prepareRow(row);
-                return (
-                  <tr {...row.getRowProps()} className="hover:bg-gray-100">
-                    {row.cells.map((cell) => (
-                      <td
-                        {...cell.getCellProps()}
-                        className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-700"
-                      >
-                        {cell.render("Cell")}
-                      </td>
-                    ))}
-                  </tr>
-                );
-              })
-            ) : (
-              <tr>
-                <td
-                  colSpan={headerGroups[0].headers?.length}
-                  className="p-4 text-center"
-                >
-                  <div className="flex items-center justify-center p-4 w-ful">
-                    <div className="text-center animate__animated animate__fadeIn animate__delay-1s">
-                      <h2 className="text-3xl font-bold text-gray-900  mb-4">
-                        No Data Found
-                      </h2>
-                      <p className="text-md text-gray-600 mb-6">
-                        Unfortunately, we couldn't find any results matching
-                        your search.
-                      </p>
-                      <div className="mt-6">
-                        <button
-                          className="px-6 py-3 bg-[#EB8844] text-white text-lg font-semibold rounded-md shadow-lg hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#EB8844] transition-all duration-300 ease-in-out transform hover:scale-105"
-                          onClick={() => window.location.reload()}
-                        >
-                          Try Again
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <Table
+        data={data}
+        columns={columns}
+      />
       {confirm && (
         <ConfirmationPage
           topicName="Expense"

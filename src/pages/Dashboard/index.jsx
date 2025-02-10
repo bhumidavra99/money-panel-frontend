@@ -15,6 +15,7 @@ import DateFilter from "../../common/DateFilter";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import moment from "moment-timezone";
 import { convertUtcToIst } from "../../common/TimeUtils";
+import Loader from "../../common/Loader";
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 const Dashboard = () => {
   const dashboardData = useSelector((state) => state?.dashboard?.dashboardData);
@@ -26,6 +27,7 @@ const Dashboard = () => {
   const [toggle, setToggle] = useState(false);
   const [savedStartDate, setSavedStartDate] = useState("");
   const [savedEndDate, setSavedEndDate] = useState("");
+  const [loading, setLoading] = useState(false);
   const handleSaveDate = () => {
     setToggle(false);
     setSavedStartDate(startDate);
@@ -126,10 +128,17 @@ const Dashboard = () => {
   }, [dashboardData]);
   const getAllDashboardData = useCallback(
     async (SDate, EDate) => {
+      setLoading(true);
       try {
         const payload = { startDate: SDate, endDate: EDate };
-        await dispatch(getDashboardData(payload));
-      } catch (error) {}
+        const response =await dispatch(getDashboardData(payload));
+        if(response?.payload?.status === 200){
+          setLoading(false);
+        }
+      } catch (error) {}finally{
+      setLoading(false);
+
+      }
     },
     [dispatch]
   );
@@ -137,6 +146,7 @@ const Dashboard = () => {
   useEffect(() => {
     getAllDashboardData();
   }, [getAllDashboardData]);
+  if(loading){return <Loader/>}
   return (
     <div className="md:p-6 p-3 bg-gray-50 min-h-[calc(100vh-120px)] h-full">
       { (dashboardData?.transactions?.offices.length > 0 || dashboardData?.profit?.offices.length > 0) ?

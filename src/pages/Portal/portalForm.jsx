@@ -67,6 +67,11 @@ const PortalForm = ({
                   value={values.balance}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  onWheel={(e) => e.target.blur()}
+                  onKeyDown={(e) =>
+                    ["ArrowUp", "ArrowDown"].includes(e.key) &&
+                    e.preventDefault()
+                  }
                 />
                 {touched.balance && errors.balance && (
                   <div className="text-red-500 text-sm">{errors.balance}</div>
@@ -84,6 +89,11 @@ const PortalForm = ({
                   value={values.normalCard}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  onWheel={(e) => e.target.blur()}
+                  onKeyDown={(e) =>
+                    ["ArrowUp", "ArrowDown"].includes(e.key) &&
+                    e.preventDefault()
+                  }
                 />
                 {touched.normalCard && errors.normalCard && (
                   <div className="text-red-500 text-sm">
@@ -103,6 +113,11 @@ const PortalForm = ({
                   value={values.businessCard}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  onWheel={(e) => e.target.blur()}
+                  onKeyDown={(e) =>
+                    ["ArrowUp", "ArrowDown"].includes(e.key) &&
+                    e.preventDefault()
+                  }
                 />
                 {touched.businessCard && errors.businessCard && (
                   <div className="text-red-500 text-sm">
@@ -122,6 +137,11 @@ const PortalForm = ({
                   value={values.masterCard}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  onWheel={(e) => e.target.blur()}
+                  onKeyDown={(e) =>
+                    ["ArrowUp", "ArrowDown"].includes(e.key) &&
+                    e.preventDefault()
+                  }
                 />
                 {touched.masterCard && errors.masterCard && (
                   <div className="text-red-500 text-sm">

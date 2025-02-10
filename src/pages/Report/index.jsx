@@ -1,5 +1,4 @@
 import React, { useState, useMemo, useEffect, useCallback } from "react";
-import { useTable, useSortBy } from "react-table";
 import { BiSearch } from "react-icons/bi";
 import DateFilter from "../../common/DateFilter";
 import Select from "react-select";
@@ -16,47 +15,19 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteReport, getReports } from "../../redux/services/reportSlice";
-import Pagination from "../../common/pagination";
 import { convertUtcToIst } from "../../common/TimeUtils";
 import ConfirmationPage from "../../common/ConfirmationPage";
 import { toast } from "react-toastify";
 import SwipeModel from "./swipeModel";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
+import Loader from "../../common/Loader";
+import { getBetweenAmount } from "../../redux/services/betweenAmountSlice";
+import Table from "../../common/Table";
+import { customStyles } from "../../common/select-custom-style";
 
 const Report = () => {
-  const customStyles = {
-    control: (provided) => ({
-      ...provided,
-      borderRadius: "0.375rem",
-      borderColor: "#D1D5DB",
-      boxShadow: "none",
-      "&:hover": {
-        borderColor: "#EB8844",
-      },
-    }),
-    option: (provided, state) => ({
-      ...provided,
-      backgroundColor: state.isSelected ? "#EB8844" : "white",
-      color: state.isSelected ? "white" : "#4B5563",
-      cursor: "pointer",
-      "&:hover": {
-        backgroundColor: state.isSelected ? "#EB8844" : "#fde5c1",
-        color: state.isSelected ? "white" : "#4B5563",
-      },
-    }),
-    singleValue: (provided) => ({
-      ...provided,
-      color: "#4B5563",
-    }),
-    dropdownIndicator: (provided) => ({
-      ...provided,
-      color: "#4B5563",
-      "&:hover": {
-        color: "#EB8844",
-      },
-    }),
-  };
+
   const dispatch = useDispatch();
   const today = moment().tz("Asia/Kolkata").format("YYYY-MM-DD");
   const limitOptions = [
@@ -88,29 +59,39 @@ const Report = () => {
   const [confirm, setConfirm] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [filterValue, setFilterValue] = useState();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const getReportsCallback = useCallback(
     (selectedStartDate, selectedEndDate) => {
-      dispatch(
-        getReports({
-          page: page + 1,
-          limit: pageLimit,
-          startDate:
-            selectedStartDate ||
-            (savedStartDate && convertUtcToIst(savedStartDate)) ||
-            convertUtcToIst(
-              moment(today).startOf("day").tz("Asia/Kolkata").format()
-            ),
-          endDate:
-            selectedEndDate ||
-            (savedEndDate && convertUtcToIst(savedEndDate)) ||
-            convertUtcToIst(
-              moment(today).endOf("day").tz("Asia/Kolkata").format()
-            ),
-          search: searchData,
-          statusFilter: filterValue,
-        })
-      );
+      setLoading(true);
+      try {
+        const response = dispatch(
+          getReports({
+            page: page + 1,
+            limit: pageLimit,
+            startDate:
+              selectedStartDate ||
+              (savedStartDate && convertUtcToIst(savedStartDate)) ||
+              convertUtcToIst(
+                moment(today).startOf("day").tz("Asia/Kolkata").format()
+              ),
+            endDate:
+              selectedEndDate ||
+              (savedEndDate && convertUtcToIst(savedEndDate)) ||
+              convertUtcToIst(
+                moment(today).endOf("day").tz("Asia/Kolkata").format()
+              ),
+            search: searchData,
+            statusFilter: filterValue,
+          })
+        );
+        if (response?.payload?.status === 200) {
+          setLoading(false);
+        }
+      } catch (error) {
+      } finally {
+        setLoading(false);
+      }
     },
     [
       dispatch,
@@ -263,15 +244,6 @@ const Report = () => {
     [navigate]
   );
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable(
-      {
-        columns,
-        data,
-      },
-      useSortBy
-    );
-
   const handleDateSubmit = () => {
     const adjustedStartDate = moment(startDate)
       .startOf("day")
@@ -319,6 +291,7 @@ const Report = () => {
           pauseOnHover: false,
         });
         setConfirm(false);
+        dispatch(getBetweenAmount());
         getReportsCallback();
         setSavedStartDate("");
         setSavedEndDate("");
@@ -438,9 +411,6 @@ const Report = () => {
       alternateRowStyles: { fillColor: "#fff" },
       margin: { left: leftMargin, right: rightMargin },
       pageBreak: "auto",
-      // styles: {
-      //   overflow: "linebreak",
-      // },
       didDrawPage: (data) => {
         const footerY = doc.internal.pageSize.height - bottomMargin;
         doc.setFontSize(10);
@@ -488,10 +458,12 @@ const Report = () => {
       document.body.removeChild(link);
     }
   };
+  if (loading) {
+    return <Loader />;
+  }
   return (
     <>
       <div className="flex flex-wrap justify-between gap-4">
-       
         <div className="relative max-w-sm w-full">
           <input
             type="text"
@@ -579,83 +551,17 @@ const Report = () => {
           </button>
         </div>
       </div>
-
-      <div className="overflow-x-auto bg-white rounded-lg shadow-md mt-4">
-        <table
-          {...getTableProps()}
-          className="min-w-full bg-white border-collapse"
-        >
-          <thead className="bg-gray-200">
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  <th
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className="px-6 py-4 text-sm whitespace-nowrap text-center font-bold text-gray-700 uppercase tracking-wider"
-                  >
-                    {column.render("Header")}
-                    <span>
-                      {column.isSorted
-                        ? column.isSortedDesc
-                          ? " 🔽"
-                          : " 🔼"
-                        : ""}
-                    </span>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()} className="divide-y divide-gray-200">
-            {rows?.length > 0 ? (
-              rows.map((row) => {
-                prepareRow(row);
-                return (
-                  <tr {...row.getRowProps()} className="hover:bg-gray-100">
-                    {row.cells.map((cell) => (
-                      <td
-                        {...cell.getCellProps()}
-                        className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700"
-                      >
-                        {cell.render("Cell")}
-                      </td>
-                    ))}
-                  </tr>
-                );
-              })
-            ) : (
-              <tr>
-                <td
-                  colSpan={headerGroups[0].headers?.length}
-                  className="p-4 text-center"
-                >
-                  <div className="flex items-center justify-center p-4 w-ful">
-                    <div className="text-center animate__animated animate__fadeIn animate__delay-1s">
-                      <h2 className="text-3xl font-bold text-gray-900  mb-4">
-                        No Data Found
-                      </h2>
-                      <p className="text-md text-gray-600 mb-6">
-                        Unfortunately, we couldn't find any results matching
-                        your search.
-                      </p>
-                      <div className="mt-6">
-                        <button
-                          className="px-6 py-3 bg-[#EB8844] text-white text-lg font-semibold rounded-md shadow-lg hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#EB8844] transition-all duration-300 ease-in-out transform hover:scale-105"
-                          onClick={() => window.location.reload()}
-                        >
-                          Try Again
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {rows?.length > 0
+      <Table
+        data={data}
+        columns={columns}
+        pageCount={pageCount}
+        limitOptions={limitOptions} 
+        pageLimit={pageLimit}
+setPage={setPage}
+        setPageLimit={setPageLimit}
+        isPagination={true}
+      />
+      {/* {rows?.length > 0
         ? pageCount && (
             <>
               <div className="flex justify-between bg-white items-center px-4">
@@ -686,7 +592,7 @@ const Report = () => {
               </div>
             </>
           )
-        : ""}
+        : ""} */}
       {toggle && (
         <DateFilter
           setToggle={setToggle}

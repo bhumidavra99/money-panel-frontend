@@ -59,6 +59,11 @@ const AccountForm = ({
                 value={values.balance}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                onWheel={(e) => e.target.blur()}
+                onKeyDown={(e) =>
+                  ["ArrowUp", "ArrowDown"].includes(e.key) &&
+                  e.preventDefault()
+                }
               />
               {touched.balance && errors.balance && (
                 <div className="text-red-500 text-sm">{errors.balance}</div>
