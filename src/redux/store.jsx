@@ -7,6 +7,7 @@ import reportSlice from "../redux/services/reportSlice";
 import accountSlice from "../redux/services/accountSlice";
 import expenseSlice from "../redux/services/expenseSlice";
 import debitSlice from "../redux/services/debitSlice";
+import creditSlice from "../redux/services/creditSlice";
 import betweenAmountSlice from "./services/betweenAmountSlice";
 
 const combineReducer = combineReducers({
@@ -18,6 +19,7 @@ const combineReducer = combineReducers({
   account: accountSlice,
   expense: expenseSlice,
   debit: debitSlice,
+  credit: creditSlice,
   betweenAmount: betweenAmountSlice,
 });
 

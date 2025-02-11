@@ -4,9 +4,13 @@ import authHeader from "./authHeader";
 
 export const getExpenses = createAsyncThunk(
   "expense/getExpenses",
-  async (_, { rejectWithValue }) => {
+  async ({statusFilter}, { rejectWithValue }) => {
     try {
-      const response = await apiInstance.get("/expenses/all", {
+      let url = `/expenses/all`;
+      if (statusFilter) {
+        url += `?statusFilter=${statusFilter}`;
+      }
+      const response = await apiInstance.get(url, {
         headers: authHeader(),
       });
       return response;

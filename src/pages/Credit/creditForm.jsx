@@ -1,10 +1,14 @@
 import React from "react";
 import { TfiClose } from "react-icons/tfi";
+import Select from "react-select";
+import { customStyles } from "../../common/select-custom-style";
 
-const DebitForm = ({
+const CreditForm = ({
   onClose,
   values,
+  setFieldValue,
   handleChange,
+  accountOptions,
   handleBlur,
   editId,
   errors,
@@ -23,7 +27,7 @@ const DebitForm = ({
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold mb-0">{`${
               editId ? "Edit" : "Add"
-            } Debit`}</h2>
+            } Credit`}</h2>
             <button
               onClick={onClose}
               className="text-gray-500 hover:text-gray-800"
@@ -33,8 +37,29 @@ const DebitForm = ({
           </div>
           <hr className="my-3" />
 
-          <form onSubmit={handleSubmit}>
-            <div className="grid md:grid-cols-2 grid-cols-1 w-full gap-4">
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <div>
+                <label className="capitalize text-base font-medium text-gray-700">
+                  Account Name
+                </label>
+                <Select
+                  name="accountName"
+                  className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#EB8844]"
+                  value={accountOptions?.find(
+                    (option) => option.value === values.accountName
+                  )}
+                  onChange={(e) =>
+                    setFieldValue("accountName", e ? e.value : "")
+                  }
+                  options={accountOptions}
+                  styles={customStyles}
+                />
+                {touched.accountName && errors.accountName && (
+                  <div className="text-red-500 text-sm">
+                    {errors.accountName}
+                  </div>
+                )}
+              </div>
               <div>
                 <label className="capitalize text-base font-medium text-gray-700">
                   Customer Name
@@ -62,8 +87,8 @@ const DebitForm = ({
                   className="w-full text-base p-2 rounded-md border border-gray-400 focus:outline-none focus:border-indigo-500"
                   type="number"
                   placeholder="Enter Amount"
-                  name="totalAmount"
-                  value={values.totalAmount}
+                  name="amount"
+                  value={values.amount}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   onWheel={(e) => e.target.blur()}
@@ -72,13 +97,12 @@ const DebitForm = ({
                     e.preventDefault()
                   }
                 />
-                {touched.totalAmount && errors.totalAmount && (
+                {touched.amount && errors.amount && (
                   <div className="text-red-500 text-sm">
-                    {errors.totalAmount}
+                    {errors.amount}
                   </div>
                 )}
               </div>
-            </div>
             <div className="flex items-center justify-center mt-5 gap-5">
               <button
                 type="button"
@@ -101,4 +125,4 @@ const DebitForm = ({
   );
 };
 
-export default DebitForm
+export default CreditForm

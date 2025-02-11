@@ -13,6 +13,7 @@ import Account from "../pages/Account";
 import EditCustomer from "../pages/Report/editCustomer";
 import Expense from "../pages/Expense";
 import Debit from "../pages/Debit";
+import Credit from "../pages/Credit";
 
 const Allroutes = () => {
   const { user } = useUser();
@@ -32,7 +33,7 @@ const Allroutes = () => {
             <Route path="/account" element={<Account />} />
             <Route path="/expenses" element={<Expense />} />
             <Route path="/debit" element={<Debit />} />
-            <Route path="/credit" element={<Expense />} />
+            <Route path="/credit" element={<Credit />} />
             <Route path="/change-password" element={<ChangePasswordPage />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Route>

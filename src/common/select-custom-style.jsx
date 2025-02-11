@@ -5,16 +5,16 @@ export const customStyles = {
       borderColor: "#D1D5DB",
       boxShadow: "none",
       "&:hover": {
-        borderColor: "#319795",
+        borderColor: "#EB8844",
       },
     }),
     option: (provided, state) => ({
       ...provided,
-      backgroundColor: state.isSelected ? "#319795" : "white",
+      backgroundColor: state.isSelected ? "#EB8844" : "white",
       color: state.isSelected ? "white" : "#4B5563",
       cursor: "pointer",
       "&:hover": {
-        backgroundColor: state.isSelected ? "#319795" : "#c7efed",
+        backgroundColor: state.isSelected ? "#EB8844" : "#ffedd5",
         color: state.isSelected ? "white" : "#4B5563",
       },
     }),
@@ -26,7 +26,7 @@ export const customStyles = {
       ...provided,
       color: "#4B5563",
       "&:hover": {
-        color: "#319795",
+        color: "#EB8844",
       },
     }),
   };

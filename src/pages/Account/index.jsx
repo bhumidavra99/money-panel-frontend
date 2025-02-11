@@ -93,7 +93,8 @@ const Account = () => {
       {
         Header: "Balance",
         accessor: "balance",
-        Cell: ({ value }) => (value ? value.toFixed(2) : "-"),
+        Cell: ({ value }) =>
+          value?.toString().includes(".") ? Number(value).toFixed(2) : value,
       },
 
       {
@@ -174,7 +175,9 @@ const Account = () => {
     }
   }, [dispatch, editId]);
 
-    if(loading){return <Loader/>}
+  if (loading) {
+    return <Loader />;
+  }
   return (
     <div className="p-6 bg-gray-50 min-h-[calc(100vh-120px)] h-full">
       <div className="flex justify-end mb-4 gap-5">
@@ -186,10 +189,7 @@ const Account = () => {
           <p className="font-semibold">Add New Account</p>
         </button>
       </div>
-      <Table
-        data={data}
-        columns={columns}
-      />
+      <Table data={data} columns={columns} />
       {confirm && (
         <ConfirmationPage
           topicName="Account"

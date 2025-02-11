@@ -17,7 +17,7 @@ import DebitForm from "./debitForm";
 import Loader from "../../common/Loader";
 import moment from "moment-timezone";
 import { getBetweenAmount } from "../../redux/services/betweenAmountSlice";
-import { convertUtcToIst } from "../../common/TimeUtils";
+import { convertIstToUtc } from "../../common/TimeUtils";
 import DateFilter from "../../common/DateFilter";
 import { BiSearch } from "react-icons/bi";
 
@@ -42,11 +42,11 @@ const Debit = () => {
   const [savedEndDate, setSavedEndDate] = useState(null);
   const initialValues = {
     cusName: "",
-    amount: "",
+    totalAmount: "",
   };
   const validationSchema = Yup.object({
     cusName: Yup.string().required("Customer Name  is required"),
-    amount: Yup.string().required("Amount is required"),
+    totalAmount: Yup.string().required("Total Amount is required"),
   });
   const today = moment().tz("Asia/Kolkata").format("YYYY-MM-DD");
   const getAllDebits = useCallback(
@@ -57,14 +57,14 @@ const Debit = () => {
           getDebits({
             startDate:
               selectedStartDate ||
-              (savedStartDate && convertUtcToIst(savedStartDate)) ||
-              convertUtcToIst(
+              (savedStartDate && convertIstToUtc(savedStartDate)) ||
+              convertIstToUtc(
                 moment(today).startOf("day").tz("Asia/Kolkata").format()
               ),
             endDate:
               selectedEndDate ||
-              (savedEndDate && convertUtcToIst(savedEndDate)) ||
-              convertUtcToIst(
+              (savedEndDate && convertIstToUtc(savedEndDate)) ||
+              convertIstToUtc(
                 moment(today).endOf("day").tz("Asia/Kolkata").format()
               ),
             search: searchData,
@@ -79,7 +79,7 @@ const Debit = () => {
         setPageLoading(false);
       }
     },
-    [dispatch, savedStartDate, savedEndDate, today,searchData]
+    [dispatch, savedStartDate, savedEndDate, today, searchData]
   );
   useEffect(() => {
     getAllDebits();
@@ -127,6 +127,8 @@ const Debit = () => {
     validationSchema,
     onSubmit,
   });
+  console.log('values', values)
+
   const data = useMemo(() => {
     return getAllDebitData || [];
   }, [getAllDebitData]);
@@ -148,13 +150,13 @@ const Debit = () => {
         Cell: ({ value }) => moment(value).format("DD-MM-YYYY"),
       },
       {
-        Header: "Amount",
-        accessor: "amount",
+        Header: "Total Amount",
+        accessor: "totalAmount",
         Cell: ({ value }) => (value ? value : "-"),
       },
       {
-        Header: "Total Balance",
-        accessor: "totalBalance",
+        Header: "Remaining Amount",
+        accessor: "remainingAmount",
         Cell: ({ value }) => (value ? value : "-"),
       },
       {
@@ -190,30 +192,29 @@ const Debit = () => {
     if (getSingleDebitData) {
       setValues({
         cusName: getSingleDebitData?.cusName,
-        amount: getSingleDebitData?.amount,
+        totalAmount: getSingleDebitData?.totalAmount,
       });
     }
   }, [getSingleDebitData, setValues]);
   const handleDateSubmit = () => {
-    const adjustedStartDate = moment(startDate)
-      .startOf("day")
-      .tz("Asia/Kolkata")
-      .format();
-    const adjustedEndDate = moment(endDate)
-      .endOf("day")
-      .tz("Asia/Kolkata")
-      .format();
-    setStartDate(adjustedStartDate);
-    setEndDate(adjustedEndDate);
-    const SDate = adjustedStartDate ? convertUtcToIst(adjustedStartDate) : null;
-    const EDate = adjustedEndDate ? convertUtcToIst(adjustedEndDate) : null;
-    setToggle(false);
+    if (startDate) {
+      startDate.setHours(0, 0, 0, 0);
+    }
+    if (endDate) {
+      endDate.setHours(23, 59, 59, 999);
+    }
+    const SDate = startDate ? convertIstToUtc(startDate) : null;
+    const EDate = endDate ? convertIstToUtc(endDate) : null;
     if (SDate && EDate) {
       setToggle(false);
       getAllDebits(SDate, EDate);
+      setStartDate(null);
+      setEndDate(null);
     } else {
       getAllDebits();
     }
+    
+    return { SDate, EDate };
   };
   const handleSaveDate = () => {
     setToggle(false);
@@ -260,7 +261,7 @@ const Debit = () => {
   }
   return (
     <div className="p-6 bg-gray-50 min-h-[calc(100vh-120px)] h-full">
-      <div className="md:flex justify-between mb-4 gap-5">
+      <div className="flex flex-wrap justify-between mb-4 gap-5">
         <div className="relative max-w-sm w-full">
           <input
             type="text"
@@ -282,7 +283,7 @@ const Debit = () => {
             <BiSearch />
           </button>
         </div>{" "}
-        <div className="inline-flex items-center space-x-2 rounded-lg  text-center">
+        <div className="flex flex-wrap justify-end items-center gap-2 rounded-lg text-center mt-3 md:mt-0">
           {savedStartDate && savedEndDate && (
             <button
               onClick={handleClearDates}
@@ -295,9 +296,7 @@ const Debit = () => {
             onClick={() => setToggle(true)}
             className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
           >
-            <FaRegCalendarAlt className="font-bold text-white w-4 h-4" />
-            <p className="font-semibold">Select Date</p>
-            {savedStartDate && savedEndDate && (
+            {savedStartDate && savedEndDate ? (
               <p>
                 (
                 {`${moment(savedStartDate).format("Do MMMM")} - ${moment(
@@ -305,6 +304,11 @@ const Debit = () => {
                 ).format("Do MMMM")}`}
                 )
               </p>
+            ) : (
+              <>
+                <FaRegCalendarAlt className="font-bold text-white w-4 h-4" />
+                <p className="font-semibold">Select Date</p>
+              </>
             )}
           </button>
           <button

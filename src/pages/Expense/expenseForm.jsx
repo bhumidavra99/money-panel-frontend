@@ -7,6 +7,7 @@ const ExpenseForm = ({
   onClose,
   values,
   handleChange,
+  officeOptions,
   handleBlur,
   editId,
   errors,
@@ -36,7 +37,6 @@ const ExpenseForm = ({
             </button>
           </div>
           <hr className="my-3" />
-
           <form onSubmit={handleSubmit}>
             <div className="w-full space-y-5">
               <div>
@@ -44,7 +44,7 @@ const ExpenseForm = ({
                   Account Name
                 </label>
                 <Select
-                  name="swipePortal"
+                  name="accountName"
                   className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#EB8844]"
                   value={accountOptions?.find(
                     (option) => option.value === values.accountName
@@ -59,6 +59,29 @@ const ExpenseForm = ({
                 {touched.accountName && errors.accountName && (
                   <div className="text-red-500 text-sm">
                     {errors.accountName}
+                  </div>
+                )}
+              </div>
+              <div>
+                <label className="capitalize text-base font-medium text-gray-700">
+                  Office Name
+                </label>
+                <Select
+                  name="officeName"
+                  className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#EB8844]"
+                  value={officeOptions?.find(
+                    (option) => option.value === values.officeName
+                  )}
+                  onChange={(e) =>
+                    setFieldValue("officeName", e ? e.value : "")
+                  }
+                  options={officeOptions}
+                  styles={customStyles}
+                  maxMenuHeight={200}
+                />
+                {touched.officeName && errors.officeName && (
+                  <div className="text-red-500 text-sm">
+                    {errors.officeName}
                   </div>
                 )}
               </div>

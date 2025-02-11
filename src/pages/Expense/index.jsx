@@ -16,11 +16,15 @@ import { getAccounts } from "../../redux/services/accountSlice";
 import ExpenseForm from "./expenseForm";
 import Loader from "../../common/Loader";
 import Table from "../../common/Table";
+import Select from "react-select";
+import { getOffices } from "../../redux/services/officeSlice";
+import { customStyles } from "../../common/select-custom-style";
 
 const Expense = () => {
   const dispatch = useDispatch();
   const getAllExpensesData = useSelector((state) => state.expense.expenseData);
   const getAllAccountData = useSelector((state) => state.account.accountData);
+  const getAllOfficesData = useSelector((state) => state.office.officeData);
   const getSingleExpenseData = useSelector(
     (state) => state.expense.singleExpenseData
   );
@@ -30,27 +34,35 @@ const Expense = () => {
   const [pageLoading, setPageLoading] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [confirm, setConfirm] = useState(false);
+ const [filterValue, setFilterValue] = useState();
   const initialValues = {
     accountName: undefined,
+    officeName: undefined,
     expenseTitle: undefined,
     amount: undefined,
   };
   const validationSchema = Yup.object({
     accountName: Yup.string().required("Account Name is required"),
+    officeName: Yup.string().required("Office Name is required"),
     expenseTitle: Yup.string().required("Expense Title is required"),
     amount: Yup.string().required("Amount is required"),
   });
   useEffect(() => {
     dispatch(getAccounts());
+    dispatch(getOffices());
   }, [dispatch]);
   const accountOptions = getAllAccountData?.map((item) => ({
     value: item.accountName,
     label: item.accountName,
   }));
+  const officeOptions = getAllOfficesData?.map((item) => ({
+    value: item.officeName,
+    label: item.officeName,
+  }));
   const getAllExpense = useCallback(async () => {
     setPageLoading(true);
     try {
-      const response = await dispatch(getExpenses());
+      const response = await dispatch(getExpenses({statusFilter: filterValue}));
       if (response?.payload?.status === 200) {
         setPageLoading(false);
       }
@@ -59,7 +71,7 @@ const Expense = () => {
     }finally {
       setPageLoading(false);
     }
-  }, [dispatch]);
+  }, [dispatch,filterValue]);
   useEffect(() => {
     getAllExpense();
   }, [getAllExpense]);
@@ -103,6 +115,11 @@ const Expense = () => {
       {
         Header: "Account Name",
         accessor: "accountName",
+        Cell: ({ value }) => (value ? value : "-"),
+      },
+      {
+        Header: "Office Name",
+        accessor: "officeName",
         Cell: ({ value }) => (value ? value : "-"),
       },
       {
@@ -167,6 +184,7 @@ const Expense = () => {
     if (getSingleExpenseData) {
       setValues({
         accountName: getSingleExpenseData?.accountName,
+        officeName: getSingleExpenseData?.officeName,
         expenseTitle: getSingleExpenseData?.expenseTitle,
         amount: getSingleExpenseData?.amount,
       });
@@ -200,6 +218,18 @@ const Expense = () => {
   return (
     <div className="p-6 bg-gray-50 min-h-[calc(100vh-120px)] h-full">
       <div className="flex justify-end mb-4 gap-5">
+      <div className="w-full sm:max-w-[200px]">
+          <Select
+            name="status"
+            className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#EB8844]"
+            value={officeOptions?.find(
+              (option) => option.value === filterValue
+            )}
+            onChange={(e) => setFilterValue(e ? e.value : "")}
+            options={officeOptions}
+            styles={customStyles}
+          />
+        </div>
         <button
           className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
           onClick={() => setModelOpen(true)}
@@ -230,6 +260,7 @@ const Expense = () => {
             setEditId();
           }}
           accountOptions={accountOptions}
+          officeOptions={officeOptions}
           values={values}
           handleChange={handleChange}
           editId={editId}
