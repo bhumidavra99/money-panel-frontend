@@ -4,9 +4,13 @@ import authHeader from "./authHeader";
 
 export const getWithdrawals = createAsyncThunk(
   "withdrawal/withdrawals",
-  async (_, { rejectWithValue }) => {
+  async ({ startDate, endDate }, { rejectWithValue }) => {
     try {
-      const response = await apiInstance.get("/withdrawal/all", {
+      let url = `/withdrawal/all`;
+      if (startDate || endDate) {
+        url += `?startDate=${startDate}&endDate=${endDate}`;
+      }
+      const response = await apiInstance.get(url, {
         headers: authHeader(),
       });
       return response;
