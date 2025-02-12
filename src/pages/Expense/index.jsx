@@ -163,7 +163,7 @@ const Expense = () => {
     []
   );
   const data = useMemo(() => {
-    return getAllExpensesData || [];
+    return getAllExpensesData.data || [];
   }, [getAllExpensesData]);
   const {
     values,
@@ -208,7 +208,6 @@ const Expense = () => {
           await dispatch(getSingleExpense(editId));
         } catch (error) {}
       };
-
       fetchSingleExpense();
     }
   }, [dispatch, editId]);
@@ -218,6 +217,14 @@ const Expense = () => {
   return (
     <div className="p-6 bg-gray-50 min-h-[calc(100vh-120px)] h-full">
       <div className="flex justify-end mb-4 gap-5">
+      <div className="inline-flex items-center space-x-2 rounded-lg  text-center">
+          <p className="font-semibold text-lg">
+            Total Expense :
+            <span className="ms-2">
+              {getAllExpensesData?.totalExpense?.toString().includes(".") ? Number(getAllExpensesData?.totalExpense).toFixed(2) : getAllExpensesData?.totalExpense}
+            </span>
+          </p>
+        </div>
       <div className="w-full sm:max-w-[200px]">
           <Select
             name="status"

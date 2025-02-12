@@ -49,7 +49,7 @@ const Offices = () => {
       {
         Header: "Profit",
         accessor: "profit",
-        Cell: ({ value }) => (value ? value.toFixed(2) : "-"),
+        Cell: ({ value }) =>  value?.toString().includes(".") ? Number(value).toFixed(2) : value,
       },
 
       {

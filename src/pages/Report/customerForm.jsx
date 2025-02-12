@@ -60,8 +60,11 @@ const CustomerForm = ({ action }) => {
     customerName: Yup.string().required("Customer Name is required"),
     officeName: Yup.string().required("Office Name is required"),
     cardNumber: Yup.string()
-    .required("Card Number is required")
-    .matches(/^(\d{4}[- ]?){1,3}\d{1,4}$/, "Please enter a valid Card Number"),
+      .required("Card Number is required")
+      .matches(
+        /^(\d{4}[- ]?){1,3}\d{1,4}$/,
+        "Please enter a valid Card Number"
+      ),
     bankName: Yup.string().required("Bank Name is required"),
     status: Yup.string().required("Status is required"),
   });
@@ -71,7 +74,7 @@ const CustomerForm = ({ action }) => {
     const filteredValues = Object.fromEntries(
       Object.entries(values).filter(([_, value]) => value !== "")
     );
-  
+
     const payload = { ...filteredValues };
     if (customerId) {
       payload.customerId = customerId;
@@ -151,11 +154,12 @@ const CustomerForm = ({ action }) => {
       setFieldValue("cardChargeInRupees", "");
     } else if (values.swipeAmount && values.cardChargeInPer) {
       const calculatedCharge =
-        (parseFloat(values.swipeAmount) * parseFloat(values.cardChargeInPer)) / 100;
+        (parseFloat(values.swipeAmount) * parseFloat(values.cardChargeInPer)) /
+        100;
       setFieldValue("cardChargeInRupees", calculatedCharge);
     }
   }, [values.swipeAmount, values.cardChargeInPer, setFieldValue]);
-  
+
   useEffect(() => {
     if (values.billAmount === "" || values.extraCharge === "") {
       setFieldValue("netBillAmount", "");
@@ -165,7 +169,7 @@ const CustomerForm = ({ action }) => {
       setFieldValue("netBillAmount", netBillAmount);
     }
   }, [values.billAmount, values.extraCharge, setFieldValue]);
-  
+
   useEffect(() => {
     if (values.swipeAmount === "" || values.cardChargeInRupees === "") {
       setFieldValue("netSwipeAmount", "");
@@ -227,23 +231,57 @@ const CustomerForm = ({ action }) => {
   useEffect(() => {
     if (getSingleCustomerData && customerId) {
       setValues({
-        customerName: getSingleCustomerData?.customerName? getSingleCustomerData?.customerName:"",
-        officeName: getSingleCustomerData?.officeName ? getSingleCustomerData?.officeName :"",
-        cardNumber: getSingleCustomerData?.cardNumber ? getSingleCustomerData?.cardNumber :"",
-        bankName: getSingleCustomerData?.bankName ? getSingleCustomerData?.bankName :"",
-        billAmount: getSingleCustomerData?.billAmount ? getSingleCustomerData?.billAmount :"",
-        swipeAmount: getSingleCustomerData?.swipeAmount ? getSingleCustomerData?.swipeAmount :"",
-        paymentPortal: getSingleCustomerData?.paymentPortal ? getSingleCustomerData?.paymentPortal :"",
-        swipePortal: getSingleCustomerData?.swipePortal ? getSingleCustomerData?.swipePortal :"",
-        chargeType: getSingleCustomerData?.chargeType ? getSingleCustomerData?.chargeType :"",
-        chargeCardType: getSingleCustomerData?.chargeCardType ? getSingleCustomerData?.chargeCardType :"",
-        chargeInPer: getSingleCustomerData?.chargeInPer ? getSingleCustomerData?.chargeInPer :"",
-        chargeInRupees: getSingleCustomerData?.chargeInRupees ? getSingleCustomerData?.chargeInRupees :"",
-        extraCharge: getSingleCustomerData?.extraCharge ? getSingleCustomerData?.extraCharge :"",
-        cardChargeInPer: getSingleCustomerData?.cardChargeInPer ? getSingleCustomerData?.cardChargeInPer :"",
-        cardChargeInRupees: getSingleCustomerData?.cardChargeInRupees ? getSingleCustomerData?.cardChargeInRupees :"",
-        profit: getSingleCustomerData?.profit ? getSingleCustomerData?.profit :"",
-        status: getSingleCustomerData?.status ? getSingleCustomerData?.status :"",
+        customerName: getSingleCustomerData?.customerName
+          ? getSingleCustomerData?.customerName
+          : "",
+        officeName: getSingleCustomerData?.officeName
+          ? getSingleCustomerData?.officeName
+          : "",
+        cardNumber: getSingleCustomerData?.cardNumber
+          ? getSingleCustomerData?.cardNumber
+          : "",
+        bankName: getSingleCustomerData?.bankName
+          ? getSingleCustomerData?.bankName
+          : "",
+        billAmount: getSingleCustomerData?.billAmount
+          ? getSingleCustomerData?.billAmount
+          : "",
+        swipeAmount: getSingleCustomerData?.swipeAmount
+          ? getSingleCustomerData?.swipeAmount
+          : "",
+        paymentPortal: getSingleCustomerData?.paymentPortal
+          ? getSingleCustomerData?.paymentPortal
+          : "",
+        swipePortal: getSingleCustomerData?.swipePortal
+          ? getSingleCustomerData?.swipePortal
+          : "",
+        chargeType: getSingleCustomerData?.chargeType
+          ? getSingleCustomerData?.chargeType
+          : "",
+        chargeCardType: getSingleCustomerData?.chargeCardType
+          ? getSingleCustomerData?.chargeCardType
+          : "",
+        chargeInPer: getSingleCustomerData?.chargeInPer
+          ? getSingleCustomerData?.chargeInPer
+          : "",
+        chargeInRupees: getSingleCustomerData?.chargeInRupees
+          ? getSingleCustomerData?.chargeInRupees
+          : "",
+        extraCharge: getSingleCustomerData?.extraCharge
+          ? getSingleCustomerData?.extraCharge
+          : "",
+        cardChargeInPer: getSingleCustomerData?.cardChargeInPer
+          ? getSingleCustomerData?.cardChargeInPer
+          : "",
+        cardChargeInRupees: getSingleCustomerData?.cardChargeInRupees
+          ? getSingleCustomerData?.cardChargeInRupees
+          : "",
+        profit: getSingleCustomerData?.profit
+          ? getSingleCustomerData?.profit
+          : "",
+        status: getSingleCustomerData?.status
+          ? getSingleCustomerData?.status
+          : "",
       });
     }
   }, [getSingleCustomerData, customerId, setValues]);
@@ -500,11 +538,11 @@ const CustomerForm = ({ action }) => {
                   value={values.chargeInPer}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                 onWheel={(e) => e.target.blur()}
-                    onKeyDown={(e) =>
-                      ["ArrowUp", "ArrowDown"].includes(e.key) &&
-                      e.preventDefault()
-                    }
+                  onWheel={(e) => e.target.blur()}
+                  onKeyDown={(e) =>
+                    ["ArrowUp", "ArrowDown"].includes(e.key) &&
+                    e.preventDefault()
+                  }
                 />
                 {touched.chargeInPer && errors.chargeInPer && (
                   <div className="text-red-500 text-sm">
@@ -524,11 +562,11 @@ const CustomerForm = ({ action }) => {
                   value={values.chargeInRupees}
                   readOnly
                   onBlur={handleBlur}
-                 onWheel={(e) => e.target.blur()}
-                    onKeyDown={(e) =>
-                      ["ArrowUp", "ArrowDown"].includes(e.key) &&
-                      e.preventDefault()
-                    }
+                  onWheel={(e) => e.target.blur()}
+                  onKeyDown={(e) =>
+                    ["ArrowUp", "ArrowDown"].includes(e.key) &&
+                    e.preventDefault()
+                  }
                 />
               </div>
               <div>
@@ -543,11 +581,11 @@ const CustomerForm = ({ action }) => {
                   value={values.extraCharge}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                 onWheel={(e) => e.target.blur()}
-                    onKeyDown={(e) =>
-                      ["ArrowUp", "ArrowDown"].includes(e.key) &&
-                      e.preventDefault()
-                    }
+                  onWheel={(e) => e.target.blur()}
+                  onKeyDown={(e) =>
+                    ["ArrowUp", "ArrowDown"].includes(e.key) &&
+                    e.preventDefault()
+                  }
                 />
                 {touched.extraCharge && errors.extraCharge && (
                   <div className="text-red-500 text-sm">
@@ -567,11 +605,11 @@ const CustomerForm = ({ action }) => {
                   readOnly
                   value={values.cardChargeInPer}
                   onBlur={handleBlur}
-                 onWheel={(e) => e.target.blur()}
-                    onKeyDown={(e) =>
-                      ["ArrowUp", "ArrowDown"].includes(e.key) &&
-                      e.preventDefault()
-                    }
+                  onWheel={(e) => e.target.blur()}
+                  onKeyDown={(e) =>
+                    ["ArrowUp", "ArrowDown"].includes(e.key) &&
+                    e.preventDefault()
+                  }
                 />
                 {touched.cardChargeInPer && errors.cardChargeInPer && (
                   <div className="text-red-500 text-sm">
@@ -591,11 +629,11 @@ const CustomerForm = ({ action }) => {
                   value={values.cardChargeInRupees}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                 onWheel={(e) => e.target.blur()}
-                    onKeyDown={(e) =>
-                      ["ArrowUp", "ArrowDown"].includes(e.key) &&
-                      e.preventDefault()
-                    }
+                  onWheel={(e) => e.target.blur()}
+                  onKeyDown={(e) =>
+                    ["ArrowUp", "ArrowDown"].includes(e.key) &&
+                    e.preventDefault()
+                  }
                 />
                 {touched.cardChargeInRupees && errors.cardChargeInRupees && (
                   <div className="text-red-500 text-sm">
@@ -615,10 +653,14 @@ const CustomerForm = ({ action }) => {
                     type="number"
                     placeholder="Enter Profit"
                     name="profit"
-                    value={values.profit ? values.profit.toFixed(2) : ''}
+                    value={
+                      values.profit?.toString().includes(".")
+                        ? Number(values.profit).toFixed(2)
+                        : values.profit
+                    }
                     readOnly
                     onBlur={handleBlur}
-                   onWheel={(e) => e.target.blur()}
+                    onWheel={(e) => e.target.blur()}
                     onKeyDown={(e) =>
                       ["ArrowUp", "ArrowDown"].includes(e.key) &&
                       e.preventDefault()

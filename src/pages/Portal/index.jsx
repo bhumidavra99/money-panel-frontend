@@ -129,7 +129,8 @@ const Portals = () => {
       {
         Header: "Balance",
         accessor: "balance",
-        Cell: ({ value }) => (value ? value.toFixed(2) : "-"),
+        Cell: ({ value }) =>
+          value?.toString().includes(".") ? Number(value).toFixed(2) : value,
       },
       {
         Header: "Normal",
@@ -195,16 +196,18 @@ const Portals = () => {
       fetchSingleAccount();
     }
   }, [dispatch, editId]);
-    if (pageLoading) {
-      return <Loader />;
-    }
+  if (pageLoading) {
+    return <Loader />;
+  }
   return (
     <div className="p-6 bg-gray-50 min-h-[calc(100vh-120px)] h-full">
       <div className="flex justify-end mb-4 gap-5">
         <div className="inline-flex items-center space-x-2 rounded-lg  text-center">
           <p className="font-semibold text-lg">
             Total Balance :
-            <span className="ms-2"> {getAllPortalData?.totalBalance.toFixed(2)}</span>
+            <span className="ms-2">
+              {getAllPortalData?.totalBalance?.toString().includes(".") ? Number(getAllPortalData?.totalBalance).toFixed(2) : getAllPortalData?.totalBalance}
+            </span>
           </p>
         </div>
         <button
@@ -215,10 +218,7 @@ const Portals = () => {
           <p className="font-semibold">Add New Portal</p>
         </button>
       </div>
-      <Table
-        data={data}
-        columns={columns}
-      />
+      <Table data={data} columns={columns} />
       {confirm && (
         <ConfirmationPage
           topicName="Marchant"

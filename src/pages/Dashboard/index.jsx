@@ -149,7 +149,7 @@ const Dashboard = () => {
   if(loading){return <Loader/>}
   return (
     <div className="md:p-6 p-3 bg-gray-50 min-h-[calc(100vh-120px)] h-full">
-      { (dashboardData?.transactions?.offices.length > 0 || dashboardData?.profit?.offices.length > 0) ?
+      {(dashboardData?.transactions?.offices.length > 0 || dashboardData?.profit?.offices.length > 0) ?
         <>
           <h2 className="text-2xl font-bold">Transactions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-x-7 gap-x-4 gap-y-4 mb-8 mt-2">

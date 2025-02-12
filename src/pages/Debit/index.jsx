@@ -146,7 +146,7 @@ const Debit = () => {
       },
       {
         Header: "Date",
-        accessor: "updatedAt",
+        accessor: "createdAt",
         Cell: ({ value }) => moment(value).format("DD-MM-YYYY"),
       },
       {

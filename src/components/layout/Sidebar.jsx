@@ -13,6 +13,7 @@ const Sidebar = ({ isOpen, setSidebarOpen }) => {
     { label: "Expenses", path: "/expenses" },
     { label: "Debit", path: "/debit" },
     { label: "Credit", path: "/credit" },
+    { label: "Financial Summary", path: "/financial-summary" },
   ];
   const sidebarRef = useRef(null);
   const { pathname } = useLocation();

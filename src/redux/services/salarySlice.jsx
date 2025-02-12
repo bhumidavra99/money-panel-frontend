@@ -2,37 +2,15 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { apiInstance } from "./axiosApi";
 import authHeader from "./authHeader";
 
-export const getOffices = createAsyncThunk(
-  "office/offices",
-  async (_, { rejectWithValue }) => {
+export const getSalaries = createAsyncThunk(
+  "salary/salaries",
+  async ({ startDate, endDate}, { rejectWithValue }) => {
     try {
-      const response = await apiInstance.get("/offices/all", {
-        headers: authHeader(),
-      });
-      return response;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
-export const getSingleOffice = createAsyncThunk(
-  "office/singleOffice",
-  async (officeId, { rejectWithValue }) => {
-    try {
-      const response = await apiInstance.get(`/office/${officeId}`, {
-        headers: authHeader(),
-      });
-      return response;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
-export const addOffice = createAsyncThunk(
-  "office/addOffice",
-  async (payload, { rejectWithValue }) => {
-    try {
-      const response = await apiInstance.post(`/office/add`, payload, {
+        let url = `/salary/all`;
+        if (startDate || endDate) {
+          url += `?startDate=${startDate}&endDate=${endDate}`;
+        }
+      const response = await apiInstance.get(url, {
         headers: authHeader(),
       });
       return response;
@@ -42,11 +20,11 @@ export const addOffice = createAsyncThunk(
   }
 );
 
-export const editOffice = createAsyncThunk(
-  "office/editOffice",
-  async (payload, { rejectWithValue }) => {
+export const getSingleSalary = createAsyncThunk(
+  "salary/singleSalary",
+  async (salaryId, { rejectWithValue }) => {
     try {
-      const response = await apiInstance.post(`/office/edit`, payload, {
+      const response = await apiInstance.get(`/salary/${salaryId}`, {
         headers: authHeader(),
       });
       return response;
@@ -55,12 +33,41 @@ export const editOffice = createAsyncThunk(
     }
   }
 );
-export const deleteOffice = createAsyncThunk(
-  "office/deleteOffice",
+
+export const addSalary = createAsyncThunk(
+  "salary/addSalary",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await apiInstance.post(`/salary/add`, payload, {
+        headers: authHeader(),
+      });
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const editSalary = createAsyncThunk(
+  "salary/editSalary",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await apiInstance.post(`/salary/edit`, payload, {
+        headers: authHeader(),
+      });
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const deleteSalary = createAsyncThunk(
+  "salary/deleteSalary",
   async (selectedId, { rejectWithValue }) => {
     try {
       const response = await apiInstance.delete(
-        `/office/delete/${selectedId}`,
+        `/salary/delete/${selectedId}`,
         {
           headers: authHeader(),
         }
@@ -73,21 +80,22 @@ export const deleteOffice = createAsyncThunk(
 );
 
 const initialState = {
-  officeData: [],
-  singleOfficeData: [],
+  salaryData: [],
+  singleSalaryData: [],
 };
 
-const officeSlice = createSlice({
-  name: "officeSlice",
+const salarySlice = createSlice({
+  name: "salarySlice",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getOffices.fulfilled, (state, action) => {
-      state.officeData = action.payload.data;
+    builder.addCase(getSalaries.fulfilled, (state, action) => {
+      state.salaryData = action.payload.data;
     });
-    builder.addCase(getSingleOffice.fulfilled, (state, action) => {
-      state.singleOfficeData = action.payload.data;
+    builder.addCase(getSingleSalary.fulfilled, (state, action) => {
+      state.singleSalaryData = action.payload.data;
     });
   },
 });
-export default officeSlice.reducer;
+
+export default salarySlice.reducer;

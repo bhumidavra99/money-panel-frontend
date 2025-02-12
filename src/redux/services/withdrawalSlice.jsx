@@ -2,37 +2,11 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { apiInstance } from "./axiosApi";
 import authHeader from "./authHeader";
 
-export const getOffices = createAsyncThunk(
-  "office/offices",
+export const getWithdrawals = createAsyncThunk(
+  "withdrawal/withdrawals",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await apiInstance.get("/offices/all", {
-        headers: authHeader(),
-      });
-      return response;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
-export const getSingleOffice = createAsyncThunk(
-  "office/singleOffice",
-  async (officeId, { rejectWithValue }) => {
-    try {
-      const response = await apiInstance.get(`/office/${officeId}`, {
-        headers: authHeader(),
-      });
-      return response;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
-export const addOffice = createAsyncThunk(
-  "office/addOffice",
-  async (payload, { rejectWithValue }) => {
-    try {
-      const response = await apiInstance.post(`/office/add`, payload, {
+      const response = await apiInstance.get("/withdrawal/all", {
         headers: authHeader(),
       });
       return response;
@@ -42,11 +16,11 @@ export const addOffice = createAsyncThunk(
   }
 );
 
-export const editOffice = createAsyncThunk(
-  "office/editOffice",
-  async (payload, { rejectWithValue }) => {
+export const getSingleWithdrawal = createAsyncThunk(
+  "withdrawal/singleWithdrawal",
+  async (withdrawalId, { rejectWithValue }) => {
     try {
-      const response = await apiInstance.post(`/office/edit`, payload, {
+      const response = await apiInstance.get(`/withdrawal/${withdrawalId}`, {
         headers: authHeader(),
       });
       return response;
@@ -55,12 +29,41 @@ export const editOffice = createAsyncThunk(
     }
   }
 );
-export const deleteOffice = createAsyncThunk(
-  "office/deleteOffice",
+
+export const addWithdrawal = createAsyncThunk(
+  "withdrawal/addWithdrawal",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await apiInstance.post(`/withdrawal/add`, payload, {
+        headers: authHeader(),
+      });
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const editWithdrawal = createAsyncThunk(
+  "withdrawal/editWithdrawal",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await apiInstance.post(`/withdrawal/edit`, payload, {
+        headers: authHeader(),
+      });
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const deleteWithdrawal = createAsyncThunk(
+  "withdrawal/deleteWithdrawal",
   async (selectedId, { rejectWithValue }) => {
     try {
       const response = await apiInstance.delete(
-        `/office/delete/${selectedId}`,
+        `/withdrawal/delete/${selectedId}`,
         {
           headers: authHeader(),
         }
@@ -73,21 +76,22 @@ export const deleteOffice = createAsyncThunk(
 );
 
 const initialState = {
-  officeData: [],
-  singleOfficeData: [],
+  withdrawalData: [],
+  singleWithdrawalData: [],
 };
 
-const officeSlice = createSlice({
-  name: "officeSlice",
+const withdrawalSlice = createSlice({
+  name: "withdrawalSlice",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getOffices.fulfilled, (state, action) => {
-      state.officeData = action.payload.data;
+    builder.addCase(getWithdrawals.fulfilled, (state, action) => {
+      state.withdrawalData = action.payload.data;
     });
-    builder.addCase(getSingleOffice.fulfilled, (state, action) => {
-      state.singleOfficeData = action.payload.data;
+    builder.addCase(getSingleWithdrawal.fulfilled, (state, action) => {
+      state.singleWithdrawalData = action.payload.data;
     });
   },
 });
-export default officeSlice.reducer;
+
+export default withdrawalSlice.reducer;

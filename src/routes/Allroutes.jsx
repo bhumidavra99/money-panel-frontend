@@ -14,6 +14,8 @@ import EditCustomer from "../pages/Report/editCustomer";
 import Expense from "../pages/Expense";
 import Debit from "../pages/Debit";
 import Credit from "../pages/Credit";
+import FinancialSummary from "../pages/FinancialSummary";
+import EditPin from "../pages/FinancialSummary/editPin";
 
 const Allroutes = () => {
   const { user } = useUser();
@@ -34,6 +36,8 @@ const Allroutes = () => {
             <Route path="/expenses" element={<Expense />} />
             <Route path="/debit" element={<Debit />} />
             <Route path="/credit" element={<Credit />} />
+            <Route path="/edit-pin" element={<EditPin />} />
+            <Route path="/financial-summary" element={<FinancialSummary />} />
             <Route path="/change-password" element={<ChangePasswordPage />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Route>
