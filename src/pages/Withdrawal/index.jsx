@@ -28,11 +28,11 @@ const Withdrawal = () => {
   const [loading, setLoading] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [confirm, setConfirm] = useState(false);
-    const [toggle, setToggle] = useState(false);
-    const [startDate, setStartDate] = useState();
-    const [endDate, setEndDate] = useState();
-    const [savedStartDate, setSavedStartDate] = useState(null);
-    const [savedEndDate, setSavedEndDate] = useState(null);
+  const [toggle, setToggle] = useState(false);
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+  const [savedStartDate, setSavedStartDate] = useState(null);
+  const [savedEndDate, setSavedEndDate] = useState(null);
 
   const columns = [
     { Header: "#", accessor: "#", Cell: ({ row }) => row.index + 1 },
@@ -78,24 +78,29 @@ const Withdrawal = () => {
     return withdrawalsData?.data || [];
   }, [withdrawalsData]);
   const today = moment().tz("Asia/Kolkata").format("YYYY-MM-DD");
-  const getAllWithdrawals = useCallback(async (selectedStartDate, selectedEndDate) => {
-    try {
-      await dispatch(getWithdrawals({
-                  startDate:
-                    selectedStartDate ||
-                    (savedStartDate && convertIstToUtc(savedStartDate)) ||
-                    convertIstToUtc(
-                      moment(today).startOf("day").tz("Asia/Kolkata").format()
-                    ),
-                  endDate:
-                    selectedEndDate ||
-                    (savedEndDate && convertIstToUtc(savedEndDate)) ||
-                    convertIstToUtc(
-                      moment(today).endOf("day").tz("Asia/Kolkata").format()
-                    ),
-                }));
-    } catch (error) {}
-  }, [dispatch]);
+  const getAllWithdrawals = useCallback(
+    async (selectedStartDate, selectedEndDate) => {
+      try {
+        await dispatch(
+          getWithdrawals({
+            startDate:
+              selectedStartDate ||
+              (savedStartDate && convertIstToUtc(savedStartDate)) ||
+              convertIstToUtc(
+                moment(today).startOf("day").tz("Asia/Kolkata").format()
+              ),
+            endDate:
+              selectedEndDate ||
+              (savedEndDate && convertIstToUtc(savedEndDate)) ||
+              convertIstToUtc(
+                moment(today).endOf("day").tz("Asia/Kolkata").format()
+              ),
+          })
+        );
+      } catch (error) {}
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
     getAllWithdrawals();
@@ -163,43 +168,43 @@ const Withdrawal = () => {
       fetchSingleWithdrawal();
     }
   }, [dispatch, editId, setValues]);
-   const handleDateSubmit = () => {
-      if (startDate) {
-        startDate.setHours(0, 0, 0, 0);
-      }
-      if (endDate) {
-        endDate.setHours(23, 59, 59, 999);
-      }
-      const SDate = startDate ? convertIstToUtc(startDate) : null;
-      const EDate = endDate ? convertIstToUtc(endDate) : null;
-      if (SDate && EDate) {
-        setToggle(false);
-        getAllWithdrawals(SDate, EDate);
-        setStartDate(null);
-        setEndDate(null);
-      } else {
-        getAllWithdrawals();
-      }
-      
-      return { SDate, EDate };
-    };
-    const handleSaveDate = () => {
+  const handleDateSubmit = () => {
+    if (startDate) {
+      startDate.setHours(0, 0, 0, 0);
+    }
+    if (endDate) {
+      endDate.setHours(23, 59, 59, 999);
+    }
+    const SDate = startDate ? convertIstToUtc(startDate) : null;
+    const EDate = endDate ? convertIstToUtc(endDate) : null;
+    if (SDate && EDate) {
       setToggle(false);
-      setSavedStartDate(startDate);
-      setSavedEndDate(endDate);
-      if (handleDateSubmit) {
-        handleDateSubmit();
-      }
-    };
-  
-    const handleClearDates = () => {
-      setToggle(false);
+      getAllWithdrawals(SDate, EDate);
+      setStartDate(null);
+      setEndDate(null);
+    } else {
       getAllWithdrawals();
-      setStartDate("");
-      setEndDate("");
-      setSavedStartDate("");
-      setSavedEndDate("");
-    };
+    }
+
+    return { SDate, EDate };
+  };
+  const handleSaveDate = () => {
+    setToggle(false);
+    setSavedStartDate(startDate);
+    setSavedEndDate(endDate);
+    if (handleDateSubmit) {
+      handleDateSubmit();
+    }
+  };
+
+  const handleClearDates = () => {
+    setToggle(false);
+    getAllWithdrawals();
+    setStartDate("");
+    setEndDate("");
+    setSavedStartDate("");
+    setSavedEndDate("");
+  };
 
   return (
     <>
@@ -216,33 +221,33 @@ const Withdrawal = () => {
               </span>
             </p>
           </div>
-            {savedStartDate && savedEndDate && (
-                      <button
-                        onClick={handleClearDates}
-                        className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
-                      >
-                        Clear
-                      </button>
-                    )}
-                    <button
-                      onClick={() => setToggle(true)}
-                      className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
-                    >
-                      {savedStartDate && savedEndDate ? (
-                        <p>
-                          (
-                          {`${moment(savedStartDate).format("Do MMMM")} - ${moment(
-                            savedEndDate
-                          ).format("Do MMMM")}`}
-                          )
-                        </p>
-                      ) : (
-                        <>
-                          <FaRegCalendarAlt className="font-bold text-white w-4 h-4" />
-                          <p className="font-semibold">Select Date</p>
-                        </>
-                      )}
-                    </button>
+          {savedStartDate && savedEndDate && (
+            <button
+              onClick={handleClearDates}
+              className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
+            >
+              Clear
+            </button>
+          )}
+          <button
+            onClick={() => setToggle(true)}
+            className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
+          >
+            {savedStartDate && savedEndDate ? (
+              <p>
+                (
+                {`${moment(savedStartDate).format("Do MMMM")} - ${moment(
+                  savedEndDate
+                ).format("Do MMMM")}`}
+                )
+              </p>
+            ) : (
+              <>
+                <FaRegCalendarAlt className="font-bold text-white w-4 h-4" />
+                <p className="font-semibold">Select Date</p>
+              </>
+            )}
+          </button>
           <button
             onClick={() => setModelOpen(true)}
             className="bg-[#EB8844] text-white flex items-center space-x-2 rounded-lg px-4 py-2"

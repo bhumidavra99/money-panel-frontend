@@ -2,8 +2,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 export const apiInstance = axios.create({
-  baseURL: "http://localhost:5000/api",
-  // baseURL: "https://money-panel-backend.vercel.app/api",
+  baseURL:process.env.REACT_APP_BASE_URL,
 });
 apiInstance.interceptors.response.use(
   (response) => response.data,
