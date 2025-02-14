@@ -130,7 +130,7 @@ const FinancialSummary = () => {
               <div className="space-y-3 text-[18px] font-medium">
                 <li className="flex justify-between items-center">
                   <h2 className="ml-2 font-bold text-[22px]">Profit</h2>
-                  <span>{getBalanceData?.totalBalance}</span>
+                  <span>{getBalanceData?.balance}</span>
                 </li>
               </div>
             </div>
