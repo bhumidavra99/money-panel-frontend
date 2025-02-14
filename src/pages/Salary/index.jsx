@@ -13,7 +13,6 @@ import {
   getSingleSalary,
 } from "../../redux/services/salarySlice";
 import { toast } from "react-toastify";
-import Loader from "../../common/Loader";
 import Table from "../../common/Table";
 import SalaryForm from "./salaryForm";
 import { getOffices } from "../../redux/services/officeSlice";
@@ -21,9 +20,9 @@ import moment from "moment-timezone";
 import { convertIstToUtc } from "../../common/TimeUtils";
 import DateFilter from "../../common/DateFilter";
 
-const Salaries = () => {
+const Salaries = ({ getAllSalariesData }) => {
   const dispatch = useDispatch();
-  const getAllSalariesData = useSelector((state) => state.salary.salaryData);
+
   const getSingleSalaryData = useSelector(
     (state) => state.salary.singleSalaryData
   );
@@ -31,15 +30,14 @@ const Salaries = () => {
   const [modelOpen, setModelOpen] = useState(false);
   const [editId, setEditId] = useState();
   const [loading, setLoading] = useState(false);
-  const [pageLoading, setPageLoading] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [confirm, setConfirm] = useState(false);
   const [savedStartDate, setSavedStartDate] = useState(null);
-    const [savedEndDate, setSavedEndDate] = useState(null);
-     const [startDate, setStartDate] = useState();
-      const [endDate, setEndDate] = useState();
-       const [toggle, setToggle] = useState(false);
-        const today = moment().tz("Asia/Kolkata").format("YYYY-MM-DD");
+  const [savedEndDate, setSavedEndDate] = useState(null);
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+  const [toggle, setToggle] = useState(false);
+  const today = moment().tz("Asia/Kolkata").format("YYYY-MM-DD");
   useEffect(() => {
     dispatch(getOffices());
   }, [dispatch]);
@@ -109,55 +107,54 @@ const Salaries = () => {
     name: Yup.string().required("Name is required"),
     amount: Yup.number().required("Amount is required"),
   });
-  const getAllSalaries = useCallback(async (selectedStartDate, selectedEndDate) => {
-    setPageLoading(true);
-    try {
-      const response = await dispatch(getSalaries({
-          startDate:
-                      selectedStartDate ||
-                      (savedStartDate && convertIstToUtc(savedStartDate)) ||
-                      convertIstToUtc(
-                        moment(today).startOf("day").tz("Asia/Kolkata").format()
-                      ),
-                    endDate:
-                      selectedEndDate ||
-                      (savedEndDate && convertIstToUtc(savedEndDate)) ||
-                      convertIstToUtc(
-                        moment(today).endOf("day").tz("Asia/Kolkata").format()
-                      ),
-      }));
-      if (response?.payload?.status === 200) {
-        setPageLoading(false);
-      }
-    } catch (error) {
-      setPageLoading(false);
-    }
-  }, [dispatch]);
+  const getAllSalaries = useCallback(
+    async (selectedStartDate, selectedEndDate) => {
+      try {
+        await dispatch(
+          getSalaries({
+            startDate:
+              selectedStartDate ||
+              (savedStartDate && convertIstToUtc(savedStartDate)) ||
+              convertIstToUtc(
+                moment(today).startOf("day").tz("Asia/Kolkata").format()
+              ),
+            endDate:
+              selectedEndDate ||
+              (savedEndDate && convertIstToUtc(savedEndDate)) ||
+              convertIstToUtc(
+                moment(today).endOf("day").tz("Asia/Kolkata").format()
+              ),
+          })
+        );
+      } catch (error) {}
+    },
+    [dispatch, savedEndDate, savedStartDate, today]
+  );
 
   useEffect(() => {
     getAllSalaries();
   }, [getAllSalaries]);
-    const handleDateSubmit = () => {
-      const adjustedStartDate = moment(startDate)
-        .startOf("day")
-        .tz("Asia/Kolkata")
-        .format();
-      const adjustedEndDate = moment(endDate)
-        .endOf("day")
-        .tz("Asia/Kolkata")
-        .format();
-      setStartDate(adjustedStartDate);
-      setEndDate(adjustedEndDate);
-      const SDate = adjustedStartDate ? convertIstToUtc(adjustedStartDate) : null;
-      const EDate = adjustedEndDate ? convertIstToUtc(adjustedEndDate) : null;
+  const handleDateSubmit = () => {
+    const adjustedStartDate = moment(startDate)
+      .startOf("day")
+      .tz("Asia/Kolkata")
+      .format();
+    const adjustedEndDate = moment(endDate)
+      .endOf("day")
+      .tz("Asia/Kolkata")
+      .format();
+    setStartDate(adjustedStartDate);
+    setEndDate(adjustedEndDate);
+    const SDate = adjustedStartDate ? convertIstToUtc(adjustedStartDate) : null;
+    const EDate = adjustedEndDate ? convertIstToUtc(adjustedEndDate) : null;
+    setToggle(false);
+    if (SDate && EDate) {
       setToggle(false);
-      if (SDate && EDate) {
-        setToggle(false);
-        getAllSalaries(SDate, EDate);
-      } else {
-        getAllSalaries();
-      }
-    };
+      getAllSalaries(SDate, EDate);
+    } else {
+      getAllSalaries();
+    }
+  };
   const handleSaveDate = () => {
     setToggle(false);
     setSavedStartDate(startDate);
@@ -253,13 +250,11 @@ const Salaries = () => {
     value: item.officeName,
     label: item.officeName,
   }));
-  if (pageLoading) return <Loader />;
   return (
     <>
       <div className="flex flex-wrap justify-between items-center gap-4">
         <h1 className="text-2xl font-semibold text-center">Salary</h1>
         <div className="flex flex-wrap gap-3">
-
           <div className="inline-flex items-center space-x-2 rounded-lg text-center">
             <p className="font-semibold text-lg">
               Total Salary :
@@ -270,7 +265,7 @@ const Salaries = () => {
               </span>
             </p>
           </div>
- {savedStartDate && savedEndDate && (
+          {savedStartDate && savedEndDate && (
             <button
               onClick={handleClearDates}
               className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"

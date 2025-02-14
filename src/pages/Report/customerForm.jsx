@@ -14,8 +14,6 @@ import { getOffices } from "../../redux/services/officeSlice";
 import { getPortals } from "../../redux/services/portalSlice";
 import { getAccounts } from "../../redux/services/accountSlice";
 import { getBetweenAmount } from "../../redux/services/betweenAmountSlice";
-import { customStyles } from "../../common/select-custom-style";
-
 const CustomerForm = ({ action }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -61,10 +59,7 @@ const CustomerForm = ({ action }) => {
     officeName: Yup.string().required("Office Name is required"),
     cardNumber: Yup.string()
       .required("Card Number is required")
-      .matches(
-        /^(\d{4}[- ]?){1,3}\d{1,4}$/,
-        "Please enter a valid Card Number"
-      ),
+      .matches(/^(\d{1} ?)+$/, "Please enter a valid Card Number"),
     bankName: Yup.string().required("Bank Name is required"),
     status: Yup.string().required("Status is required"),
   });
@@ -343,7 +338,7 @@ const CustomerForm = ({ action }) => {
                     setFieldValue("officeName", e ? e.value : "")
                   }
                   options={officeNameOptions}
-                  styles={customStyles}
+                  classNamePrefix="custom-select"
                 />
                 {touched.officeName && errors.officeName && (
                   <div className="text-red-500 text-sm">
@@ -459,7 +454,7 @@ const CustomerForm = ({ action }) => {
                     setFieldValue("paymentPortal", e ? e.value : "")
                   }
                   options={paymentPortalOptions}
-                  styles={customStyles}
+                  classNamePrefix="custom-select"
                 />
                 {touched.paymentPortal && errors.paymentPortal && (
                   <div className="text-red-500 text-sm">
@@ -481,7 +476,7 @@ const CustomerForm = ({ action }) => {
                     setFieldValue("swipePortal", e ? e.value : "")
                   }
                   options={swipePortalOptions}
-                  styles={customStyles}
+                  classNamePrefix="custom-select"
                 />
                 {touched.swipePortal && errors.swipePortal && (
                   <div className="text-red-500 text-sm">
@@ -504,7 +499,7 @@ const CustomerForm = ({ action }) => {
                   }
                   placeholder="Select Charge Type"
                   className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#EB8844]"
-                  styles={customStyles}
+                  classNamePrefix="custom-select"
                 />
               </div>
               <div>
@@ -521,7 +516,7 @@ const CustomerForm = ({ action }) => {
                     setFieldValue("chargeCardType", e ? e.value : "")
                   }
                   options={chargeCardTypeOptions}
-                  styles={customStyles}
+                  classNamePrefix="custom-select"
                 />
               </div>
             </div>
@@ -679,7 +674,7 @@ const CustomerForm = ({ action }) => {
                     )}
                     onChange={(e) => setFieldValue("status", e ? e.value : "")}
                     options={statusOptions}
-                    styles={customStyles}
+                    classNamePrefix="custom-select"
                   />
                   {touched.status && errors.status && (
                     <div className="text-red-500 text-sm">{errors.status}</div>

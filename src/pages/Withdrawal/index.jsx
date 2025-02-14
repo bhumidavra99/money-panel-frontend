@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { FaPlus, FaEdit, FaTrash, FaRegCalendarAlt } from "react-icons/fa";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -18,11 +18,8 @@ import moment from "moment-timezone";
 import { convertIstToUtc } from "../../common/TimeUtils";
 import DateFilter from "../../common/DateFilter";
 
-const Withdrawal = () => {
+const Withdrawal = ({withdrawalsData}) => {
   const dispatch = useDispatch();
-  const withdrawalsData = useSelector(
-    (state) => state.withdrawal.withdrawalData
-  );
   const [modelOpen, setModelOpen] = useState(false);
   const [editId, setEditId] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -99,7 +96,7 @@ const Withdrawal = () => {
         );
       } catch (error) {}
     },
-    [dispatch]
+    [dispatch,today,savedEndDate,savedStartDate]
   );
 
   useEffect(() => {

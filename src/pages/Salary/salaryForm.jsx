@@ -1,7 +1,6 @@
 import React from "react";
 import { TfiClose } from "react-icons/tfi";
 import Select from "react-select";
-import { customStyles } from "../../common/select-custom-style";
 
 const SalaryForm = ({
   onClose,
@@ -52,7 +51,7 @@ const SalaryForm = ({
                     setFieldValue("officeName", e ? e.value : "")
                   }
                   options={officeNameOptions}
-                  styles={customStyles}
+                  classNamePrefix="custom-select" 
                 />
                 {touched.officeName && errors.officeName && (
                   <div className="text-red-500 text-sm">

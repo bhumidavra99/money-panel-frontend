@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { useUser } from "../../redux/services/authSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { VscEye, VscEyeClosed } from "react-icons/vsc";
@@ -70,7 +69,6 @@ const EditPin = () => {
     errors,
     touched,
     handleSubmit,
-    resetForm,
   } = useFormik({
     initialValues,
     validationSchema,

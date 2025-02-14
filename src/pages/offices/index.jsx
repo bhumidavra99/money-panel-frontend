@@ -188,7 +188,8 @@ const Offices = () => {
   }
   return (
     <>
-      <div className="flex flex-wrap justify-end gap-4">
+      <div className="flex flex-wrap justify-between items-center gap-4">
+      <h1 className="text-2xl font-semibold text-center">Offices</h1>
         <button
           className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
           onClick={() => setModelOpen(true)}

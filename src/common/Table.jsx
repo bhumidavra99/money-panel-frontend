@@ -2,7 +2,6 @@ import React from "react";
 import { useTable, useSortBy } from "react-table";
 import Pagination from "./pagination";
 import Select from "react-select";
-import { customStyles } from "./select-custom-style";
 
 const Table = ({
   data,
@@ -109,7 +108,7 @@ const Table = ({
                       value: option.value,
                       label: option.label,
                     }))}
-                    styles={customStyles}
+                    classNamePrefix="custom-select" 
                     menuPlacement="top"
                   />
                 </div>

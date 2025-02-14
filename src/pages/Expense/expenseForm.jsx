@@ -1,7 +1,6 @@
 import React from "react";
 import { TfiClose } from "react-icons/tfi";
 import Select from "react-select";
-import { customStyles } from "../../common/select-custom-style";
 
 const ExpenseForm = ({
   onClose,
@@ -53,7 +52,7 @@ const ExpenseForm = ({
                     setFieldValue("accountName", e ? e.value : "")
                   }
                   options={accountOptions}
-                  styles={customStyles}
+                  classNamePrefix="custom-select" 
                   maxMenuHeight={200}
                 />
                 {touched.accountName && errors.accountName && (
@@ -76,7 +75,7 @@ const ExpenseForm = ({
                     setFieldValue("officeName", e ? e.value : "")
                   }
                   options={officeOptions}
-                  styles={customStyles}
+                  classNamePrefix="custom-select" 
                   maxMenuHeight={200}
                 />
                 {touched.officeName && errors.officeName && (

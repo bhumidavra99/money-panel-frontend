@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
+import { FaEdit, FaPlus, FaRegCalendarAlt, FaTrash } from "react-icons/fa";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,7 +18,9 @@ import Loader from "../../common/Loader";
 import Table from "../../common/Table";
 import Select from "react-select";
 import { getOffices } from "../../redux/services/officeSlice";
-import { customStyles } from "../../common/select-custom-style";
+import DateFilter from "../../common/DateFilter";
+import { convertIstToUtc } from "../../common/TimeUtils";
+import moment from "moment-timezone";
 
 const Expense = () => {
   const dispatch = useDispatch();
@@ -34,7 +36,12 @@ const Expense = () => {
   const [pageLoading, setPageLoading] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [confirm, setConfirm] = useState(false);
- const [filterValue, setFilterValue] = useState();
+  const [filterValue, setFilterValue] = useState();
+  const [toggle, setToggle] = useState(false);
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+  const [savedStartDate, setSavedStartDate] = useState(null);
+  const [savedEndDate, setSavedEndDate] = useState(null);
   const initialValues = {
     accountName: undefined,
     officeName: undefined,
@@ -59,19 +66,39 @@ const Expense = () => {
     value: item.officeName,
     label: item.officeName,
   }));
-  const getAllExpense = useCallback(async () => {
-    setPageLoading(true);
-    try {
-      const response = await dispatch(getExpenses({statusFilter: filterValue}));
-      if (response?.payload?.status === 200) {
+  const today = moment().tz("Asia/Kolkata").format("YYYY-MM-DD");
+  const getAllExpense = useCallback(
+    async (selectedStartDate, selectedEndDate) => {
+      setPageLoading(true);
+      try {
+        const response = await dispatch(
+          getExpenses({
+            startDate:
+              selectedStartDate ||
+              (savedStartDate && convertIstToUtc(savedStartDate)) ||
+              convertIstToUtc(
+                moment(today).startOf("day").tz("Asia/Kolkata").format()
+              ),
+            endDate:
+              selectedEndDate ||
+              (savedEndDate && convertIstToUtc(savedEndDate)) ||
+              convertIstToUtc(
+                moment(today).endOf("day").tz("Asia/Kolkata").format()
+              ),
+            statusFilter: filterValue,
+          })
+        );
+        if (response?.payload?.status === 200) {
+          setPageLoading(false);
+        }
+      } catch (error) {
+        setPageLoading(false);
+      } finally {
         setPageLoading(false);
       }
-    } catch (error) {
-      setPageLoading(false);
-    }finally {
-      setPageLoading(false);
-    }
-  }, [dispatch,filterValue]);
+    },
+    [dispatch, filterValue, savedStartDate, savedEndDate, today]
+  );
   useEffect(() => {
     getAllExpense();
   }, [getAllExpense]);
@@ -214,18 +241,55 @@ const Expense = () => {
   if (pageLoading) {
     return <Loader />;
   }
+  const handleDateSubmit = () => {
+    if (startDate) {
+      startDate.setHours(0, 0, 0, 0);
+    }
+    if (endDate) {
+      endDate.setHours(23, 59, 59, 999);
+    }
+    const SDate = startDate ? convertIstToUtc(startDate) : null;
+    const EDate = endDate ? convertIstToUtc(endDate) : null;
+    if (SDate && EDate) {
+      setToggle(false);
+      getAllExpense(SDate, EDate);
+      setStartDate(null);
+      setEndDate(null);
+    } else {
+      getAllExpense();
+    }
+
+    return { SDate, EDate };
+  };
+  const handleSaveDate = () => {
+    setToggle(false);
+    setSavedStartDate(startDate);
+    setSavedEndDate(endDate);
+    if (handleDateSubmit) {
+      handleDateSubmit();
+    }
+  };
+
+  const handleClearDates = () => {
+    setToggle(false);
+    getAllExpense();
+    setStartDate("");
+    setEndDate("");
+    setSavedStartDate("");
+    setSavedEndDate("");
+  };
   return (
     <div className="p-6 bg-gray-50 min-h-[calc(100vh-120px)] h-full">
-      <div className="flex justify-end mb-4 gap-5">
-      <div className="inline-flex items-center space-x-2 rounded-lg  text-center">
+      <div className="flex justify-end items-center mb-4 gap-5">
           <p className="font-semibold text-lg">
             Total Expense :
             <span className="ms-2">
-              {getAllExpensesData?.totalExpense?.toString().includes(".") ? Number(getAllExpensesData?.totalExpense).toFixed(2) : getAllExpensesData?.totalExpense}
+              {getAllExpensesData?.totalExpense?.toString().includes(".")
+                ? Number(getAllExpensesData?.totalExpense).toFixed(2)
+                : getAllExpensesData?.totalExpense}
             </span>
           </p>
-        </div>
-      <div className="w-full sm:max-w-[200px]">
+          <div className="w-full sm:max-w-[200px]">
           <Select
             name="status"
             className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#EB8844]"
@@ -234,9 +298,36 @@ const Expense = () => {
             )}
             onChange={(e) => setFilterValue(e ? e.value : "")}
             options={officeOptions}
-            styles={customStyles}
+            classNamePrefix="custom-select" 
           />
         </div>
+          {savedStartDate && savedEndDate && (
+            <button
+              onClick={handleClearDates}
+              className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
+            >
+              Clear
+            </button>
+          )}
+          <button
+            onClick={() => setToggle(true)}
+            className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
+          >
+            {savedStartDate && savedEndDate ? (
+              <p>
+                (
+                {`${moment(savedStartDate).format("Do MMMM")} - ${moment(
+                  savedEndDate
+                ).format("Do MMMM")}`}
+                )
+              </p>
+            ) : (
+              <>
+                <FaRegCalendarAlt className="font-bold text-white w-4 h-4" />
+                <p className="font-semibold">Select Date</p>
+              </>
+            )}
+          </button>
         <button
           className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
           onClick={() => setModelOpen(true)}
@@ -245,10 +336,22 @@ const Expense = () => {
           <p className="font-semibold">Add New Expense</p>
         </button>
       </div>
-      <Table
-        data={data}
-        columns={columns}
-      />
+      <Table data={data} columns={columns} />
+      {toggle && (
+        <DateFilter
+          setToggle={setToggle}
+          toggle={toggle}
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
+          handleDateSubmit={handleSaveDate}
+          startDate={startDate}
+          endDate={endDate}
+          onClose={() => {
+            setToggle(false);
+            handleClearDates();
+          }}
+        />
+      )}
       {confirm && (
         <ConfirmationPage
           topicName="Expense"

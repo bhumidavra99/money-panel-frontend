@@ -7,7 +7,6 @@ const Sidebar = ({ isOpen, setSidebarOpen }) => {
     { label: "Dashboard", path: "/dashboard"|| "/" },
     { label: "Portals", path: "/portal" },
     { label: "Report", path: "/report" },
-    { label: "Offices", path: "/offices" },
     { label: "Add Customer", path: "/add-customer" },
     { label: "Account", path: "/account" },
     { label: "Expenses", path: "/expenses" },

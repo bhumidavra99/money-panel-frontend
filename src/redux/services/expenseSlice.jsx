@@ -4,9 +4,12 @@ import authHeader from "./authHeader";
 
 export const getExpenses = createAsyncThunk(
   "expense/getExpenses",
-  async ({statusFilter}, { rejectWithValue }) => {
+  async ({startDate, endDate,statusFilter}, { rejectWithValue }) => {
     try {
       let url = `/expenses/all`;
+      if (startDate || endDate) {
+        url += `?startDate=${startDate}&endDate=${endDate}`;
+      }
       if (statusFilter) {
         url += `?statusFilter=${statusFilter}`;
       }

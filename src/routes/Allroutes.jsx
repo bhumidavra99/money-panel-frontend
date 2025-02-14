@@ -31,7 +31,6 @@ const Allroutes = () => {
             <Route path="/report" element={<Report />} />
             <Route path="/add-customer" element={<AddCustomer />} />
             <Route path="/edit-customer" element={<EditCustomer />} />
-            <Route path="/offices" element={<Offices />} />
             <Route path="/account" element={<Account />} />
             <Route path="/expenses" element={<Expense />} />
             <Route path="/debit" element={<Debit />} />
@@ -45,7 +44,15 @@ const Allroutes = () => {
           <Route path="/login" element={<Login />} />
         )}
 
-<Route path="*" element={<Navigate to={Object.keys(user).length > 0 ? "/dashboard" : "/login"} replace />} />
+        <Route
+          path="*"
+          element={
+            <Navigate
+              to={Object.keys(user).length > 0 ? "/dashboard" : "/login"}
+              replace
+            />
+          }
+        />
       </Routes>
     </Suspense>
   );

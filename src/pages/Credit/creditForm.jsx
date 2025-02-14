@@ -1,7 +1,6 @@
 import React from "react";
 import { TfiClose } from "react-icons/tfi";
 import Select from "react-select";
-import { customStyles } from "../../common/select-custom-style";
 
 const CreditForm = ({
   onClose,
@@ -52,7 +51,7 @@ const CreditForm = ({
                     setFieldValue("accountName", e ? e.value : "")
                   }
                   options={accountOptions}
-                  styles={customStyles}
+                  classNamePrefix="custom-select" 
                 />
                 {touched.accountName && errors.accountName && (
                   <div className="text-red-500 text-sm">

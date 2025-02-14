@@ -2,7 +2,7 @@ import React from "react";
 import { TfiClose } from "react-icons/tfi";
 import { useNavigate } from "react-router-dom";
 
-const PinModal = ({ pin, setPin, handleSubmit }) => {
+const PinModal = ({ pin, setPin, handleSubmit,loading }) => {
   const navigate = useNavigate();
   return (
     <div>
@@ -30,15 +30,28 @@ const PinModal = ({ pin, setPin, handleSubmit }) => {
                 placeholder="Enter PIN"
                 value={pin}
                 onChange={(e) => setPin(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleSubmit();
+                  }
+                }}
               />
             </div>
             <div>
+            {loading ?
+            <button
+            className="w-full flex justify-center py-3 bg-[#EB8844] text-white rounded-lg"
+          >
+            <div className="loader"></div> 
+          </button>
+           : 
               <button
                 onClick={handleSubmit}
                 className="w-full py-3 bg-[#EB8844] text-white rounded-lg"
               >
                 Verify PIN
               </button>
+            }
             </div>
           </div>
         </div>

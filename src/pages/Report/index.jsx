@@ -24,7 +24,6 @@ import "jspdf-autotable";
 import Loader from "../../common/Loader";
 import { getBetweenAmount } from "../../redux/services/betweenAmountSlice";
 import Table from "../../common/Table";
-import { customStyles } from "../../common/select-custom-style";
 
 const Report = () => {
 
@@ -494,7 +493,7 @@ const Report = () => {
             )}
             onChange={(e) => setFilterValue(e ? e.value : "")}
             options={statusOptions}
-            styles={customStyles}
+            classNamePrefix="custom-select" 
           />
         </div>
         <div className="flex gap-4 flex-wrap ">
@@ -579,7 +578,7 @@ setPage={setPage}
                       value: option.value,
                       label: option.label,
                     }))}
-                    styles={customStyles}
+                    classNamePrefix="custom-select" 
                     menuPlacement="top"
                   />
                 </div>
