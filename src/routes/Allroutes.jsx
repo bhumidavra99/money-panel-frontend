@@ -4,7 +4,6 @@ import Login from "../pages/auth/Login";
 import DefaultLayout from "../components/layout/DefaultLayout";
 import Dashboard from "../pages/Dashboard";
 import Report from "../pages/Report";
-import Offices from "../pages/offices";
 import AddCustomer from "../pages/Report/addCustomer";
 import ChangePasswordPage from "../pages/auth/ChangePassword";
 import { useUser } from "../redux/services/authSlice";

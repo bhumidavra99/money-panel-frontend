@@ -14,19 +14,17 @@ import {
   getSingleOffice,
 } from "../../redux/services/officeSlice";
 import { toast } from "react-toastify";
-import Loader from "../../common/Loader";
 import Table from "../../common/Table";
 
-const Offices = () => {
+const Offices = ({ getAllOfficesData }) => {
   const dispatch = useDispatch();
-  const getAllOfficesData = useSelector((state) => state.office.officeData);
+
   const getSingleOfficeData = useSelector(
     (state) => state.office.singleOfficeData
   );
   const [modelOpen, setModelOpen] = useState(false);
   const [editId, setEditId] = useState();
   const [loading, setLoading] = useState(false);
-  const [pageLoading, setPageLoading] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [confirm, setConfirm] = useState(false);
   const columns = useMemo(
@@ -49,7 +47,8 @@ const Offices = () => {
       {
         Header: "Profit",
         accessor: "profit",
-        Cell: ({ value }) =>  value?.toString().includes(".") ? Number(value).toFixed(2) : value,
+        Cell: ({ value }) =>
+          value?.toString().includes(".") ? Number(value).toFixed(2) : value,
       },
 
       {
@@ -96,17 +95,11 @@ const Offices = () => {
     officeName: Yup.string().required("Office Name  is required"),
   });
   const getAllOffice = useCallback(async () => {
-    setPageLoading(true);
     try {
       const response = await dispatch(getOffices());
       if (response?.payload?.status === 200) {
-        setPageLoading(false);
       }
-    } catch (error) {
-      setPageLoading(false);
-    } finally {
-      setPageLoading(false);
-    }
+    } catch (error) {}
   }, [dispatch]);
   useEffect(() => {
     getAllOffice();
@@ -183,13 +176,11 @@ const Offices = () => {
       fetchSingleOffice();
     }
   }, [dispatch, editId]);
-  if (pageLoading) {
-    return <Loader />;
-  }
+
   return (
     <>
       <div className="flex flex-wrap justify-between items-center gap-4">
-      <h1 className="text-2xl font-semibold text-center">Offices</h1>
+        <h1 className="text-2xl font-semibold text-center">Offices</h1>
         <button
           className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
           onClick={() => setModelOpen(true)}
@@ -198,10 +189,7 @@ const Offices = () => {
           <p className="font-semibold">Add New Office</p>
         </button>
       </div>
-      <Table
-        data={data}
-        columns={columns}
-      />
+      <Table data={data} columns={columns} />
       {confirm && (
         <ConfirmationPage
           topicName="Office"

@@ -15,6 +15,7 @@ import Offices from "../offices";
 const FinancialSummary = () => {
   const getBalanceData = useSelector((state) => state.balance.balanceData);
     const getAllSalariesData = useSelector((state) => state.salary.salaryData);
+      const getAllOfficesData = useSelector((state) => state.office.officeData);
     const withdrawalsData = useSelector(
       (state) => state.withdrawal.withdrawalData
     );
@@ -166,7 +167,7 @@ const FinancialSummary = () => {
             </div>
           </div>
           <div className="mt-8">
-          <Offices/>
+          <Offices getAllOfficesData={getAllOfficesData}/>
           </div>
           <div className="my-8">
             <Salaries getAllSalariesData={getAllSalariesData} />
