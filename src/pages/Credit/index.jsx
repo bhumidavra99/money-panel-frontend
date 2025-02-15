@@ -132,7 +132,6 @@ const Credit = () => {
     validationSchema,
     onSubmit,
   });
-console.log('errors', errors)
   const data = useMemo(() => {
     return getAllCreditData.data || [];
   }, [getAllCreditData]);

@@ -169,9 +169,9 @@ const CustomerForm = ({ action }) => {
   useEffect(() => {
     if (values.billAmount === "" || values.extraCharge === "") {
       setFieldValue("netBillAmount", "");
-    } else if (values.billAmount && values.extraCharge) {
+    } else if (values.billAmount || values.extraCharge) {
       const netBillAmount =
-        parseFloat(values.billAmount) + parseFloat(values.extraCharge);
+        parseFloat(values.billAmount) + parseFloat(values.extraCharge || 0);
       setFieldValue("netBillAmount", netBillAmount);
     }
   }, [values.billAmount, values.extraCharge, setFieldValue]);
@@ -179,7 +179,7 @@ const CustomerForm = ({ action }) => {
   useEffect(() => {
     if (values.swipeAmount === "" || values.cardChargeInRupees === "") {
       setFieldValue("netSwipeAmount", "");
-    } else if (values.swipeAmount && values.cardChargeInRupees) {
+    } else if (values.swipeAmount || values.cardChargeInRupees) {
       const netSwipeAmount =
         parseFloat(values.swipeAmount) - parseFloat(values.cardChargeInRupees);
       setFieldValue("netSwipeAmount", netSwipeAmount);
@@ -211,7 +211,7 @@ const CustomerForm = ({ action }) => {
     label: item.portalName,
   }));
   const chargeOptions = [
-    { value: "", label: "No Account Selected " },
+    // { value: "", label: "No Account Selected " },
     ...getAllAccountData?.map((item) => ({
       value: item.accountName,
       label: item.accountName,
