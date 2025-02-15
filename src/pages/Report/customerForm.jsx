@@ -43,12 +43,7 @@ const CustomerForm = ({ action }) => {
     swipeAmount: undefined,
     paymentPortal: undefined,
     swipePortal: undefined,
-    chargeType: [
-      {
-        accName: undefined,
-        amount: undefined,
-      },
-    ],
+    chargeType: [],
     chargeCardType: undefined,
     chargeInPer: undefined,
     chargeInRupees: undefined,
@@ -211,7 +206,7 @@ const CustomerForm = ({ action }) => {
     label: item.portalName,
   }));
   const chargeOptions = [
-    // { value: "", label: "No Account Selected " },
+    { value: "", label: "Charge Swipe" },
     ...getAllAccountData?.map((item) => ({
       value: item.accountName,
       label: item.accountName,

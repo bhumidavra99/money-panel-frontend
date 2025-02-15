@@ -22,7 +22,7 @@ const dispatch = useDispatch()
   const [showSuggestions, setShowSuggestions] = useState(false);
   const getAllDebitData = useSelector((state) => state.debit.debitData);
   const uniqueCusNames = [
-    ...new Set(getAllDebitData?.data?.map((item) => item.cusName.toLowerCase())),
+    ...new Set(getAllDebitData?.data?.map((item) => item.cusName)),
   ];
 
   const handleCusNameChange = (e) => {
