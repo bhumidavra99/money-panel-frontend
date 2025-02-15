@@ -4,12 +4,10 @@ import authHeader from "./authHeader";
 
 export const getTotalBalance = createAsyncThunk(
   "balance/totalBalance",
-  async ({ startDate, endDate }, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       let url = `/total-balance`;
-      if (startDate || endDate) {
-        url += `?startDate=${startDate}&endDate=${endDate}`;
-      }
+    
       const response = await apiInstance.get(url, {
         headers: authHeader(),
       });

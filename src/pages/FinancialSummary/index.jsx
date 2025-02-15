@@ -40,7 +40,7 @@ const FinancialSummary = () => {
     } catch (error) {}
   };
   const getBalances = useCallback(
-    async (selectedStartDate, selectedEndDate) => {
+    async () => {
       try {
         await dispatch(
           getTotalBalance()

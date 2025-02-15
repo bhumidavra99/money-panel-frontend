@@ -40,7 +40,6 @@ const dispatch = useDispatch()
     }
   };
 
-
   const handleSuggestionClick = (name) => {
     setFieldValue("cusName", name);
     setShowSuggestions(false);
