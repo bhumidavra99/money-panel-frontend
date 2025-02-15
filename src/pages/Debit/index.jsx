@@ -127,8 +127,6 @@ const Debit = () => {
     validationSchema,
     onSubmit,
   });
-  console.log('values', values)
-
   const data = useMemo(() => {
     return getAllDebitData.data || [];
   }, [getAllDebitData]);

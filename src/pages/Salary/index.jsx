@@ -22,7 +22,6 @@ import DateFilter from "../../common/DateFilter";
 
 const Salaries = ({ getAllSalariesData }) => {
   const dispatch = useDispatch();
-
   const getSingleSalaryData = useSelector(
     (state) => state.salary.singleSalaryData
   );

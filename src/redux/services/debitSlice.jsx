@@ -4,24 +4,30 @@ import authHeader from "./authHeader";
 
 export const getDebits = createAsyncThunk(
   "debit/getDebits",
-  async ({ startDate, endDate, search}, { rejectWithValue }) => {
+  async ({ startDate, endDate, search } = {}, { rejectWithValue }) => {
     try {
-        let url = `/debits/all`;
-        if (startDate || endDate) {
-          url += `?startDate=${startDate}&endDate=${endDate}`;
-        }
-        if (search) {
-          url += `&search=${search}`;
-        }   
+      let url = "/debits/all";
+      let queryParams = new URLSearchParams();
+
+      if (startDate) queryParams.append("startDate", startDate);
+      if (endDate) queryParams.append("endDate", endDate);
+      if (search) queryParams.append("search", search);
+
+      if (queryParams.toString()) {
+        url += `?${queryParams.toString()}`;
+      }
+
       const response = await apiInstance.get(url, {
         headers: authHeader(),
       });
+
       return response;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data || "Something went wrong");
     }
   }
 );
+
 
 export const getSingleDebit = createAsyncThunk(
   "debit/getSingleDebit",
