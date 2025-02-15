@@ -200,7 +200,12 @@ const Report = () => {
       {
         Header: "Account Type",
         accessor: "chargeType",
-        Cell: ({ value }) => (value ? value : "-"),
+        Cell: ({ value }) => {
+          if (value && Array.isArray(value)) {
+            return value.map(item => item.accName).join(" / ");
+          }
+          return "-"; 
+        },
       },
       {
         Header: "Card Charge (₹)",

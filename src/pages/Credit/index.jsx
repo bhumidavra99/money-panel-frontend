@@ -134,7 +134,7 @@ const Credit = () => {
   });
 console.log('errors', errors)
   const data = useMemo(() => {
-    return getAllCreditData || [];
+    return getAllCreditData.data || [];
   }, [getAllCreditData]);
   const columns = useMemo(
     () => [
@@ -297,6 +297,14 @@ console.log('errors', errors)
           </button>
         </div>
         <div className="flex flex-wrap justify-end items-center gap-2 rounded-lg text-center mt-3 md:mt-0">
+        <div className="inline-flex items-center space-x-2 rounded-lg  text-center">
+          <p className="font-semibold text-lg">
+            Total Balance :
+            <span className="ms-2">
+              {getAllCreditData?.totalAmount?.toString().includes(".") ? Number(getAllCreditData?.totalAmount).toFixed(2) : getAllCreditData?.totalAmount}
+            </span>
+          </p>
+        </div>
           {savedStartDate && savedEndDate && (
             <button
               onClick={handleClearDates}

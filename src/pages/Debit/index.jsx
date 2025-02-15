@@ -130,7 +130,7 @@ const Debit = () => {
   console.log('values', values)
 
   const data = useMemo(() => {
-    return getAllDebitData || [];
+    return getAllDebitData.data || [];
   }, [getAllDebitData]);
   const columns = useMemo(
     () => [
@@ -284,6 +284,14 @@ const Debit = () => {
           </button>
         </div>{" "}
         <div className="flex flex-wrap justify-end items-center gap-2 rounded-lg text-center mt-3 md:mt-0">
+        <div className="inline-flex items-center space-x-2 rounded-lg  text-center">
+          <p className="font-semibold text-lg">
+            Total Balance :
+            <span className="ms-2">
+              {getAllDebitData?.totalRemainingAmount?.toString().includes(".") ? Number(getAllDebitData?.totalRemainingAmount).toFixed(2) : getAllDebitData?.totalRemainingAmount}
+            </span>
+          </p>
+        </div>
           {savedStartDate && savedEndDate && (
             <button
               onClick={handleClearDates}

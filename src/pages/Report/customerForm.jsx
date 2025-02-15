@@ -43,7 +43,12 @@ const CustomerForm = ({ action }) => {
     swipeAmount: undefined,
     paymentPortal: undefined,
     swipePortal: undefined,
-    chargeType: undefined,
+    chargeType: [
+      {
+        accName: undefined,
+        amount: undefined,
+      },
+    ],
     chargeCardType: undefined,
     chargeInPer: undefined,
     chargeInRupees: undefined,
@@ -62,6 +67,12 @@ const CustomerForm = ({ action }) => {
       .matches(/^(\d{1} ?)+$/, "Please enter a valid Card Number"),
     bankName: Yup.string().required("Bank Name is required"),
     status: Yup.string().required("Status is required"),
+    chargeInPer: Yup.number()
+      .max(100, "Charge cannot exceed 100%")
+      .nullable(),
+    cardChargeInPer: Yup.number()
+      .max(100, "Card Charge cannot exceed 100%")
+      .nullable(),
   });
 
   const onSubmit = async () => {
@@ -175,18 +186,12 @@ const CustomerForm = ({ action }) => {
     }
   }, [values.swipeAmount, values.cardChargeInRupees, setFieldValue]);
   useEffect(() => {
-    if (
-      values.chargeInRupees &&
-      values.extraCharge &&
-      values.cardChargeInRupees
-    ) {
-      const effectiveExtraCharge = parseFloat(values.extraCharge) || 0;
-      const profit =
-        parseFloat(values.chargeInRupees) -
-        effectiveExtraCharge -
-        parseFloat(values.cardChargeInRupees);
-      setFieldValue("profit", profit);
-    }
+    const chargeInRupees = parseFloat(values.chargeInRupees) || 0;
+    const extraCharge = parseFloat(values.extraCharge) || 0;
+    const cardChargeInRupees = parseFloat(values.cardChargeInRupees) || 0;
+
+    const profit = chargeInRupees - extraCharge - cardChargeInRupees;
+    setFieldValue("profit", profit);
   }, [
     values.chargeInRupees,
     values.extraCharge,
@@ -250,9 +255,14 @@ const CustomerForm = ({ action }) => {
         swipePortal: getSingleCustomerData?.swipePortal
           ? getSingleCustomerData?.swipePortal
           : "",
-        chargeType: getSingleCustomerData?.chargeType
-          ? getSingleCustomerData?.chargeType
-          : "",
+        chargeType:
+          getSingleCustomerData?.chargeType &&
+          Array.isArray(getSingleCustomerData?.chargeType)
+            ? getSingleCustomerData?.chargeType.map((item) => ({
+                accName: item.accName || "",
+                amount: item.amount || 0,
+              }))
+            : [],
         chargeCardType: getSingleCustomerData?.chargeCardType
           ? getSingleCustomerData?.chargeCardType
           : "",
@@ -294,6 +304,31 @@ const CustomerForm = ({ action }) => {
     const cleanedValue = value?.replace(/\D/g, "");
     const formattedValue = cleanedValue.replace(/(\d{4})(?=\d)/g, "$1 ");
     return formattedValue;
+  };
+
+  const handleAccountChange = (selectedOptions) => {
+    const newChargeType = selectedOptions
+      ? selectedOptions.map((option) => ({
+          accName: option.value,
+          amount: "",
+        }))
+      : [];
+
+    setValues({
+      ...values,
+      chargeType: newChargeType,
+    });
+  };
+
+  const handleInputChange = (account, value) => {
+    const updatedChargeType = values.chargeType.map((item) =>
+      item.accName === account ? { ...item, amount: value } : item
+    );
+
+    setValues({
+      ...values,
+      chargeType: updatedChargeType,
+    });
   };
   return (
     <div>
@@ -491,16 +526,46 @@ const CustomerForm = ({ action }) => {
                 <Select
                   name="chargeType"
                   options={chargeOptions}
-                  value={chargeOptions?.find(
-                    (option) => option.value === values?.chargeType
+                  value={chargeOptions?.filter((option) =>
+                    values?.chargeType
+                      ?.map((item) => item.accName)
+                      .includes(option.value)
                   )}
-                  onChange={(e) =>
-                    setFieldValue("chargeType", e ? e.value : "")
-                  }
+                  onChange={handleAccountChange}
+                  isMulti
                   placeholder="Select Charge Type"
-                  className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#EB8844]"
+                  className="w-full text-base mt-1 rounded-md focus:border-[#EB8844]"
                   classNamePrefix="custom-select"
                 />
+
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                  {values.chargeType.map((account, index) => {
+                    if (account && account.accName) {
+                      return (
+                        <div key={index}>
+                          <div className="flex flex-col items-center">
+                            <span className="mr-2 font-semibold">
+                              {account.accName}:
+                            </span>
+                            <input
+                              type="text"
+                              value={account.amount || ""}
+                              onChange={(e) =>
+                                handleInputChange(
+                                  account.accName,
+                                  e.target.value
+                                )
+                              }
+                              placeholder="Enter G Pay"
+                              className="w-full text-base p-2 mt-1 h-[40px] rounded-md border border-gray-400 focus:outline-none focus:border-[#EB8844]"
+                            />
+                          </div>
+                        </div>
+                      );
+                    }
+                    return null;
+                  })}
+                </div>
               </div>
               <div>
                 <label className="capitalize text-base font-medium text-gray-700">
