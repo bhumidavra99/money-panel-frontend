@@ -284,7 +284,7 @@ const Debit = () => {
         <div className="flex flex-wrap justify-end items-center gap-2 rounded-lg text-center mt-3 md:mt-0">
         <div className="inline-flex items-center space-x-2 rounded-lg  text-center">
           <p className="font-semibold text-lg">
-            Total Balance :
+            Total Remaining Amount :
             <span className="ms-2">
               {getAllDebitData?.totalRemainingAmount?.toString().includes(".") ? Number(getAllDebitData?.totalRemainingAmount).toFixed(2) : getAllDebitData?.totalRemainingAmount}
             </span>

@@ -90,7 +90,14 @@ const RemainingDebit = () => {
             <BiSearch />
           </button>
         </div>
-        <div></div>
+        <div className="inline-flex items-center space-x-2 rounded-lg  text-center">
+          <p className="font-semibold text-lg">
+            Total Remaining Amount :
+            <span className="ms-2">
+              {getAllDebitData?.totalRemainingAmount?.toString().includes(".") ? Number(getAllDebitData?.totalRemainingAmount).toFixed(2) : getAllDebitData?.totalRemainingAmount}
+            </span>
+          </p>
+        </div>
       </div>
 
       <Table data={data} columns={columns} />
