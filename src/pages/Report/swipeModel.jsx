@@ -45,6 +45,11 @@ const SwipeModel = ({ onClose }) => {
                       placeholder="Swipe Amount"
                       value={swipeAmount}
                       onChange={(e) => setSwipeAmount(e.target.value)}
+                      onWheel={(e) => e.target.blur()}
+                      onKeyDown={(e) =>
+                        ["ArrowUp", "ArrowDown"].includes(e.key) &&
+                        e.preventDefault()
+                      }
                     />
                   </td>
                   <td className="border-2 border-black p-2">
@@ -54,6 +59,11 @@ const SwipeModel = ({ onClose }) => {
                       placeholder="Rate"
                       value={rate}
                       onChange={(e) => setRate(e.target.value)}
+                      onWheel={(e) => e.target.blur()}
+                      onKeyDown={(e) =>
+                        ["ArrowUp", "ArrowDown"].includes(e.key) &&
+                        e.preventDefault()
+                      }
                     />
                   </td>
 

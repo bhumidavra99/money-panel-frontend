@@ -206,7 +206,7 @@ const CustomerForm = ({ action }) => {
     label: item.portalName,
   }));
   const chargeOptions = [
-    { value: "", label: "Charge Swipe" },
+    { value: "charge-swipe", label: "Charge Swipe" },
     ...getAllAccountData?.map((item) => ({
       value: item.accountName,
       label: item.accountName,
@@ -535,7 +535,7 @@ const CustomerForm = ({ action }) => {
 
                 <div className="grid grid-cols-2 gap-4 mt-4">
                   {values.chargeType.map((account, index) => {
-                    if (account && account.accName) {
+                    if (account && account.accName  && account.accName !== "charge-swipe") {
                       return (
                         <div key={index}>
                           <div className="flex flex-col items-center">
@@ -543,7 +543,8 @@ const CustomerForm = ({ action }) => {
                               {account.accName}:
                             </span>
                             <input
-                              type="text"
+                              type="number"
+                              name={account.accName}
                               value={account.amount || ""}
                               onChange={(e) =>
                                 handleInputChange(
@@ -551,8 +552,13 @@ const CustomerForm = ({ action }) => {
                                   e.target.value
                                 )
                               }
-                              placeholder="Enter G Pay"
+                              placeholder={`Enter ${account.accName}`} 
                               className="w-full text-base p-2 mt-1 h-[40px] rounded-md border border-gray-400 focus:outline-none focus:border-[#EB8844]"
+                              onWheel={(e) => e.target.blur()}
+                              onKeyDown={(e) =>
+                                ["ArrowUp", "ArrowDown"].includes(e.key) &&
+                                e.preventDefault()
+                              }
                             />
                           </div>
                         </div>
