@@ -4,7 +4,7 @@ import authHeader from "./authHeader";
 
 export const getCredits = createAsyncThunk(
   "credit/getCredits",
-  async ({ startDate, endDate, search }, { rejectWithValue }) => {
+  async ({ startDate, endDate, search } = {}, { rejectWithValue }) => {
     try {
       let url = `/credits/all`;
       if (startDate || endDate) {

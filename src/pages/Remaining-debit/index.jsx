@@ -4,10 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { getDebits } from "../../redux/services/debitSlice";
 import Loader from "../../common/Loader";
 import { BiSearch } from "react-icons/bi";
+import { getCredits } from "../../redux/services/creditSlice";
 
 const RemainingDebit = () => {
   const dispatch = useDispatch();
   const getAllDebitData = useSelector((state) => state.debit.debitData);
+  const getAllCreditData = useSelector((state) => state.credit.creditData);
   const [pageLoading, setPageLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchData, setSearchData] = useState("");
@@ -15,6 +17,7 @@ const RemainingDebit = () => {
     setPageLoading(true);
     try {
       const response = await dispatch(getDebits({ search: searchData }));
+
       if (response?.payload?.status === 200) {
         setPageLoading(false);
       }
@@ -24,23 +27,44 @@ const RemainingDebit = () => {
       setPageLoading(false);
     }
   }, [dispatch, searchData]);
+
   useEffect(() => {
     getAllDebits();
   }, [getAllDebits]);
+  useEffect(() => {
+    const fetchCredits = async () => {
+      try {
+        await dispatch(getCredits()).unwrap();
+      } catch (error) {
+        console.error("Error fetching credits:", error);
+      }
+    };
+    fetchCredits();
+  }, [dispatch]);
+
   const data = useMemo(() => {
-    if (!getAllDebitData?.data) return [];
+    if (!getAllDebitData?.data && !getAllCreditData?.data) return [];
     const uniqueData = [];
     const seenCusNames = new Set();
-
-    getAllDebitData.data.forEach((record) => {
+    getAllDebitData?.data?.forEach((record) => {
       if (!seenCusNames.has(record.cusName)) {
         uniqueData.push(record);
         seenCusNames.add(record.cusName);
       }
     });
 
+    getAllCreditData?.data?.forEach((creditRecord) => {
+      if (!seenCusNames.has(creditRecord.cusName)) {
+        uniqueData.push({
+          cusName: creditRecord.cusName,
+          remainingAmount: -creditRecord.amount,
+        });
+        seenCusNames.add(creditRecord.cusName);
+      }
+    });
+
     return uniqueData;
-  }, [getAllDebitData]);
+  }, [getAllDebitData, getAllCreditData]);
 
   const columns = useMemo(
     () => [
@@ -56,8 +80,12 @@ const RemainingDebit = () => {
       },
       {
         Header: "Remaining Amount",
-        accessor: "remainingAmount",
-        Cell: ({ value }) => (value ? value : "-"),
+        accessor: "amount",
+        Cell: ({ row }) =>
+          row?.original?.remainingAmount !== undefined &&
+          row?.original?.remainingAmount !== null
+            ? row?.original?.remainingAmount
+            : row.original?.amount ?? "-",
       },
     ],
     []
@@ -94,7 +122,9 @@ const RemainingDebit = () => {
           <p className="font-semibold text-lg">
             Total Remaining Amount :
             <span className="ms-2">
-              {getAllDebitData?.totalRemainingAmount?.toString().includes(".") ? Number(getAllDebitData?.totalRemainingAmount).toFixed(2) : getAllDebitData?.totalRemainingAmount}
+              {getAllDebitData?.totalRemainingAmount?.toString().includes(".")
+                ? Number(getAllDebitData?.totalRemainingAmount).toFixed(2)
+                : getAllDebitData?.totalRemainingAmount}
             </span>
           </p>
         </div>
