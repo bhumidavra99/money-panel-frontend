@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FaPlus, FaEdit, FaTrash, FaRegCalendarAlt } from "react-icons/fa";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -18,7 +18,7 @@ import moment from "moment-timezone";
 import { convertIstToUtc } from "../../common/TimeUtils";
 import DateFilter from "../../common/DateFilter";
 
-const Withdrawal = ({withdrawalsData}) => {
+const Withdrawal = ({ withdrawalsData }) => {
   const dispatch = useDispatch();
   const [modelOpen, setModelOpen] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -30,7 +30,9 @@ const Withdrawal = ({withdrawalsData}) => {
   const [endDate, setEndDate] = useState();
   const [savedStartDate, setSavedStartDate] = useState(null);
   const [savedEndDate, setSavedEndDate] = useState(null);
-
+  const getSingleWithdrawalData = useSelector(
+    (state) => state.withdrawal.singleWithdrawalData
+  );
   const columns = [
     { Header: "#", accessor: "#", Cell: ({ row }) => row.index + 1 },
     {
@@ -38,13 +40,14 @@ const Withdrawal = ({withdrawalsData}) => {
       accessor: "updatedAt",
       Cell: ({ value }) => moment(value).format("DD-MM-YYYY"),
     },
+    { Header: "Name", accessor: "name" },
     {
       Header: "Amount",
       accessor: "amount",
       Cell: ({ value }) =>
         value?.toString().includes(".") ? Number(value).toFixed(2) : value,
     },
-    { Header: "Name", accessor: "name" },
+
     {
       Header: "Action",
       Cell: ({ row }) => (
@@ -96,7 +99,7 @@ const Withdrawal = ({withdrawalsData}) => {
         );
       } catch (error) {}
     },
-    [dispatch,today,savedEndDate,savedStartDate]
+    [dispatch, today, savedEndDate, savedStartDate]
   );
 
   useEffect(() => {
@@ -158,8 +161,7 @@ const Withdrawal = ({withdrawalsData}) => {
     if (editId) {
       const fetchSingleWithdrawal = async () => {
         try {
-          const response = await dispatch(getSingleWithdrawal(editId));
-          setValues(response.payload);
+          await dispatch(getSingleWithdrawal(editId));
         } catch (error) {}
       };
       fetchSingleWithdrawal();
@@ -185,6 +187,15 @@ const Withdrawal = ({withdrawalsData}) => {
 
     return { SDate, EDate };
   };
+  useEffect(() => {
+    if (getSingleWithdrawalData) {
+      setValues({
+        name: getSingleWithdrawalData?.name,
+        amount: getSingleWithdrawalData?.amount,
+      });
+    }
+  }, [getSingleWithdrawalData, setValues]);
+
   const handleSaveDate = () => {
     setToggle(false);
     setSavedStartDate(startDate);
@@ -289,6 +300,7 @@ const Withdrawal = ({withdrawalsData}) => {
           }}
           values={values}
           handleChange={handleChange}
+          editId={editId}
           handleBlur={handleBlur}
           errors={errors}
           touched={touched}
