@@ -61,16 +61,10 @@ const Credit = () => {
           getCredits({
             startDate:
               selectedStartDate ||
-              (savedStartDate && convertIstToUtc(savedStartDate)) ||
-              convertIstToUtc(
-                moment(today).startOf("day").tz("Asia/Kolkata").format()
-              ),
+              (savedStartDate && convertIstToUtc(savedStartDate)),
             endDate:
               selectedEndDate ||
-              (savedEndDate && convertIstToUtc(savedEndDate)) ||
-              convertIstToUtc(
-                moment(today).endOf("day").tz("Asia/Kolkata").format()
-              ),
+              (savedEndDate && convertIstToUtc(savedEndDate)),
             search: searchData,
           })
         );
@@ -162,32 +156,32 @@ const Credit = () => {
         accessor: "amount",
         Cell: ({ value }) => (value ? value : "-"),
       },
-      {
-        Header: "Action",
-        Cell: ({ row }) => (
-          <div className="flex items-center justify-center gap-4">
-            <button
-              className="text-blue-500 hover:text-blue-700"
-              onClick={() => {
-                setModelOpen(true);
-                setEditId(row?.original?._id);
-              }}
-            >
-              <FaEdit size={16} />
-            </button>
+      // {
+      //   Header: "Action",
+      //   Cell: ({ row }) => (
+      //     <div className="flex items-center justify-center gap-4">
+      //       <button
+      //         className="text-blue-500 hover:text-blue-700"
+      //         onClick={() => {
+      //           setModelOpen(true);
+      //           setEditId(row?.original?._id);
+      //         }}
+      //       >
+      //         <FaEdit size={16} />
+      //       </button>
 
-            <button
-              className="text-red-500 hover:text-red-700"
-              onClick={() => {
-                setItemToDelete(row.original?._id);
-                setConfirm(true);
-              }}
-            >
-              <FaTrash size={16} />
-            </button>
-          </div>
-        ),
-      },
+      //       <button
+      //         className="text-red-500 hover:text-red-700"
+      //         onClick={() => {
+      //           setItemToDelete(row.original?._id);
+      //           setConfirm(true);
+      //         }}
+      //       >
+      //         <FaTrash size={16} />
+      //       </button>
+      //     </div>
+      //   ),
+      // },
     ],
     []
   );
@@ -331,13 +325,13 @@ const Credit = () => {
               </>
             )}
           </button>
-          <button
+          {/* <button
             className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
             onClick={() => setModelOpen(true)}
           >
             <FaPlus className="font-bold text-white w-4 h-4" />
             <p className="font-semibold">Add New Record</p>
-          </button>
+          </button> */}
         </div>
       </div>
       <Table data={data} columns={columns} />

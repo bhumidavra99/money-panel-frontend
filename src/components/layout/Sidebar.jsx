@@ -11,7 +11,8 @@ const Sidebar = ({ isOpen, setSidebarOpen }) => {
     { label: "Account", path: "/account" },
     { label: "Expenses", path: "/expenses" },
     { label: "Debit", path: "/debit" },
-    { label: "Remaining  Debit", path: "/remaining-debit" },
+    // { label: "Remaining  Debit", path: "/remaining-debit" },
+    { label: "Remaining Amount", path: "/debit-credit" },
     { label: "Credit", path: "/credit" },
     { label: "Financial Summary", path: "/financial-summary" },
   ];

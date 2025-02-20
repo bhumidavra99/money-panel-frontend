@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import ConfirmationPage from "../../common/ConfirmationPage";
-import DebitForm from "./debitForm";
+import DebitForm from "../Debit-Credit/DebitCreditForm";
 import Loader from "../../common/Loader";
 import moment from "moment-timezone";
 import { getBetweenAmount } from "../../redux/services/betweenAmountSlice";
@@ -48,7 +48,6 @@ const Debit = () => {
     cusName: Yup.string().required("Customer Name  is required"),
     totalAmount: Yup.string().required("Total Amount is required"),
   });
-  const today = moment().tz("Asia/Kolkata").format("YYYY-MM-DD");
   const getAllDebits = useCallback(
     async (selectedStartDate, selectedEndDate) => {
       setPageLoading(true);
@@ -57,16 +56,10 @@ const Debit = () => {
           getDebits({
             startDate:
               selectedStartDate ||
-              (savedStartDate && convertIstToUtc(savedStartDate)) ||
-              convertIstToUtc(
-                moment(today).startOf("day").tz("Asia/Kolkata").format()
-              ),
+              (savedStartDate && convertIstToUtc(savedStartDate)),
             endDate:
               selectedEndDate ||
-              (savedEndDate && convertIstToUtc(savedEndDate)) ||
-              convertIstToUtc(
-                moment(today).endOf("day").tz("Asia/Kolkata").format()
-              ),
+              (savedEndDate && convertIstToUtc(savedEndDate)),
             search: searchData,
           })
         );
@@ -79,7 +72,7 @@ const Debit = () => {
         setPageLoading(false);
       }
     },
-    [dispatch, savedStartDate, savedEndDate, today, searchData]
+    [dispatch, savedStartDate, savedEndDate, searchData]
   );
   useEffect(() => {
     getAllDebits();
@@ -149,40 +142,40 @@ const Debit = () => {
       },
       {
         Header: "Total Amount",
-        accessor: "totalAmount",
+        accessor: "amount",
         Cell: ({ value }) => (value ? value : "-"),
       },
-      {
-        Header: "Remaining Amount",
-        accessor: "remainingAmount",
-        Cell: ({ value }) => (value ? value : "-"),
-      },
-      {
-        Header: "Action",
-        Cell: ({ row }) => (
-          <div className="flex items-center justify-center gap-4">
-            <button
-              className="text-blue-500 hover:text-blue-700"
-              onClick={() => {
-                setModelOpen(true);
-                setEditId(row?.original?._id);
-              }}
-            >
-              <FaEdit size={16} />
-            </button>
+      // {
+      //   Header: "Remaining Amount",
+      //   accessor: "remainingAmount",
+      //   Cell: ({ value }) => (value ? value : "-"),
+      // },
+      // {
+      //   Header: "Action",
+      //   Cell: ({ row }) => (
+      //     <div className="flex items-center justify-center gap-4">
+      //       <button
+      //         className="text-blue-500 hover:text-blue-700"
+      //         onClick={() => {
+      //           setModelOpen(true);
+      //           setEditId(row?.original?._id);
+      //         }}
+      //       >
+      //         <FaEdit size={16} />
+      //       </button>
 
-            <button
-              className="text-red-500 hover:text-red-700"
-              onClick={() => {
-                setItemToDelete(row.original?._id);
-                setConfirm(true);
-              }}
-            >
-              <FaTrash size={16} />
-            </button>
-          </div>
-        ),
-      },
+      //       <button
+      //         className="text-red-500 hover:text-red-700"
+      //         onClick={() => {
+      //           setItemToDelete(row.original?._id);
+      //           setConfirm(true);
+      //         }}
+      //       >
+      //         <FaTrash size={16} />
+      //       </button>
+      //     </div>
+      //   ),
+      // },
     ],
     []
   );
@@ -286,7 +279,7 @@ const Debit = () => {
           <p className="font-semibold text-lg">
             Total Remaining Amount :
             <span className="ms-2">
-              {getAllDebitData?.totalRemainingAmount?.toString().includes(".") ? Number(getAllDebitData?.totalRemainingAmount).toFixed(2) : getAllDebitData?.totalRemainingAmount}
+              {getAllDebitData?.totalAmount}
             </span>
           </p>
         </div>
@@ -317,13 +310,13 @@ const Debit = () => {
               </>
             )}
           </button>
-          <button
+          {/* <button
             className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
             onClick={() => setModelOpen(true)}
           >
             <FaPlus className="font-bold text-white w-4 h-4" />
             <p className="font-semibold">Add New Record</p>
-          </button>
+          </button> */}
         </div>
       </div>
       <Table data={data} columns={columns} />

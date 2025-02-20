@@ -16,6 +16,7 @@ import Credit from "../pages/Credit";
 import FinancialSummary from "../pages/FinancialSummary";
 import EditPin from "../pages/FinancialSummary/editPin";
 import RemainingDebit from "../pages/Remaining-debit";
+  import DebitCreditPage from "../pages/Debit-Credit";
 
 const Allroutes = () => {
   const { user } = useUser();
@@ -35,6 +36,7 @@ const Allroutes = () => {
             <Route path="/expenses" element={<Expense />} />
             <Route path="/debit" element={<Debit />} />
             <Route path="/remaining-debit" element={<RemainingDebit />} />
+            <Route path="/debit-credit" element={<DebitCreditPage />} />
             <Route path="/credit" element={<Credit />} />
             <Route path="/edit-pin" element={<EditPin />} />
             <Route path="/financial-summary" element={<FinancialSummary />} />

@@ -12,6 +12,7 @@ import salarySlice from "../redux/services/salarySlice";
 import withdrawalSlice from "../redux/services/withdrawalSlice";
 import balanceSlice from "../redux/services/balanceSlice";
 import betweenAmountSlice from "./services/betweenAmountSlice";
+import debitCreditSlice from "./services/debitCreditSlice";
 
 const combineReducer = combineReducers({
   auth: authSlice,
@@ -23,6 +24,7 @@ const combineReducer = combineReducers({
   expense: expenseSlice,
   debit: debitSlice,
   credit: creditSlice,
+  debitCredit: debitCreditSlice,
   salary: salarySlice,
   withdrawal: withdrawalSlice,
   balance: balanceSlice,
