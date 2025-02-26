@@ -25,3 +25,9 @@ export const convertUtcToIstDateOnly = (utcDate) => {
 
   return istDate;
 };
+
+export const formatCardNumber = (value) => {
+  const cleanedValue = value?.replace(/\D/g, "");
+  const formattedValue = cleanedValue.replace(/(\d{4})(?=\d)/g, "$1 ");
+  return formattedValue;
+};

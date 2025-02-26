@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { FaEdit, FaPlus, FaRegCalendarAlt, FaTrash } from "react-icons/fa";
+import { FaRegCalendarAlt } from "react-icons/fa";
 import Table from "../../common/Table";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addDebit,
-  deleteDebit,
   editDebit,
   getDebits,
   getSingleDebit,
@@ -12,7 +11,6 @@ import {
 import { toast } from "react-toastify";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import ConfirmationPage from "../../common/ConfirmationPage";
 import DebitForm from "../Debit-Credit/DebitCreditForm";
 import Loader from "../../common/Loader";
 import moment from "moment-timezone";
@@ -33,8 +31,6 @@ const Debit = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchData, setSearchData] = useState("");
   const [pageLoading, setPageLoading] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState(null);
-  const [confirm, setConfirm] = useState(false);
   const [toggle, setToggle] = useState(false);
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
@@ -145,37 +141,6 @@ const Debit = () => {
         accessor: "amount",
         Cell: ({ value }) => (value ? value : "-"),
       },
-      // {
-      //   Header: "Remaining Amount",
-      //   accessor: "remainingAmount",
-      //   Cell: ({ value }) => (value ? value : "-"),
-      // },
-      // {
-      //   Header: "Action",
-      //   Cell: ({ row }) => (
-      //     <div className="flex items-center justify-center gap-4">
-      //       <button
-      //         className="text-blue-500 hover:text-blue-700"
-      //         onClick={() => {
-      //           setModelOpen(true);
-      //           setEditId(row?.original?._id);
-      //         }}
-      //       >
-      //         <FaEdit size={16} />
-      //       </button>
-
-      //       <button
-      //         className="text-red-500 hover:text-red-700"
-      //         onClick={() => {
-      //           setItemToDelete(row.original?._id);
-      //           setConfirm(true);
-      //         }}
-      //       >
-      //         <FaTrash size={16} />
-      //       </button>
-      //     </div>
-      //   ),
-      // },
     ],
     []
   );
@@ -204,7 +169,7 @@ const Debit = () => {
     } else {
       getAllDebits();
     }
-    
+
     return { SDate, EDate };
   };
   const handleSaveDate = () => {
@@ -223,18 +188,6 @@ const Debit = () => {
     setEndDate("");
     setSavedStartDate("");
     setSavedEndDate("");
-  };
-  const deleteDebitData = async (row) => {
-    try {
-      const response = await dispatch(deleteDebit(itemToDelete));
-      toast.success(response?.payload?.message, {
-        autoClose: 2000,
-        pauseOnHover: false,
-      });
-      dispatch(getBetweenAmount());
-      setConfirm(false);
-      getAllDebits();
-    } catch (error) {}
   };
   useEffect(() => {
     if (editId) {
@@ -275,14 +228,12 @@ const Debit = () => {
           </button>
         </div>{" "}
         <div className="flex flex-wrap justify-end items-center gap-2 rounded-lg text-center mt-3 md:mt-0">
-        <div className="inline-flex items-center space-x-2 rounded-lg  text-center">
-          <p className="font-semibold text-lg">
-            Total Remaining Amount :
-            <span className="ms-2">
-              {getAllDebitData?.totalAmount}
-            </span>
-          </p>
-        </div>
+          <div className="inline-flex items-center space-x-2 rounded-lg  text-center">
+            <p className="font-semibold text-lg">
+              Total Remaining Amount :
+              <span className="ms-2">{getAllDebitData?.totalAmount}</span>
+            </p>
+          </div>
           {savedStartDate && savedEndDate && (
             <button
               onClick={handleClearDates}
@@ -310,13 +261,6 @@ const Debit = () => {
               </>
             )}
           </button>
-          {/* <button
-            className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
-            onClick={() => setModelOpen(true)}
-          >
-            <FaPlus className="font-bold text-white w-4 h-4" />
-            <p className="font-semibold">Add New Record</p>
-          </button> */}
         </div>
       </div>
       <Table data={data} columns={columns} />
@@ -333,14 +277,6 @@ const Debit = () => {
             setToggle(false);
             handleClearDates();
           }}
-        />
-      )}
-      {confirm && (
-        <ConfirmationPage
-          topicName="Debit"
-          confirm={confirm}
-          onDelete={deleteDebitData}
-          onCancel={() => setConfirm(false)}
         />
       )}
       {modelOpen && (

@@ -183,7 +183,10 @@ const Offices = ({ getAllOfficesData }) => {
         <h1 className="text-2xl font-semibold text-center">Offices</h1>
         <button
           className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
-          onClick={() => setModelOpen(true)}
+          onClick={() => {
+            setEditId(null);
+            setModelOpen(true);
+          }}
         >
           <FaPlus className="font-bold text-white w-4 h-4" />
           <p className="font-semibold">Add New Office</p>

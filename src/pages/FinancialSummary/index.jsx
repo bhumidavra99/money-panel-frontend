@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Withdrawal from "../Withdrawal";
 import Salaries from "../Salary";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,11 +10,11 @@ import Offices from "../offices";
 
 const FinancialSummary = () => {
   const getBalanceData = useSelector((state) => state.balance.balanceData);
-    const getAllSalariesData = useSelector((state) => state.salary.salaryData);
-      const getAllOfficesData = useSelector((state) => state.office.officeData);
-    const withdrawalsData = useSelector(
-      (state) => state.withdrawal.withdrawalData
-    );
+  const getAllSalariesData = useSelector((state) => state.salary.salaryData);
+  const getAllOfficesData = useSelector((state) => state.office.officeData);
+  const withdrawalsData = useSelector(
+    (state) => state.withdrawal.withdrawalData
+  );
   const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [canAccess, setCanAccess] = useState(false);
@@ -37,24 +37,24 @@ const FinancialSummary = () => {
         setCanAccess(true);
         setIsModalOpen(false);
       }
-    } catch (error) {}
-  };
-  const getBalances = useCallback(
-    async () => {
-      try {
-        await dispatch(
-          getTotalBalance()
-        );
-      } catch (error) {}
-    },[dispatch]
-  );
-  useEffect(() => {
-    if (canAccess) {
-      getBalances();
+    } catch (error) {
+      setLoading(false);
+    }finally{
+      setLoading(false);
     }
-  }, [getBalances, canAccess]);
-
+  };
+ 
+  useEffect(() => {
+    const fetchBalance = async () => {
+      if (canAccess) {
+        await dispatch(getTotalBalance());
+      }
+    };
   
+    fetchBalance();
+  }, [dispatch, canAccess]);
+  
+
   return (
     <>
       {isModalOpen && (
@@ -77,10 +77,9 @@ const FinancialSummary = () => {
                 </li>
               </div>
             </div>
-           
           </div>
           <div className="mt-8">
-          <Offices getAllOfficesData={getAllOfficesData}/>
+            <Offices getAllOfficesData={getAllOfficesData} />
           </div>
           <div className="my-8">
             <Salaries getAllSalariesData={getAllSalariesData} />
@@ -88,7 +87,6 @@ const FinancialSummary = () => {
           <Withdrawal withdrawalsData={withdrawalsData} />
         </div>
       )}
-       
     </>
   );
 };

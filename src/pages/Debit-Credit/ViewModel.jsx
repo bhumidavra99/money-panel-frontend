@@ -18,12 +18,6 @@ const ViewModel = ({ itemToView, onClose }) => {
         <hr className="my-3" />
 
         <div className="mb-4">
-          {/* <p className="text-lg font-semibold">
-            Transaction Type: 
-            <span className={`ml-2 ${itemToView.transactionType === "debit" ? "text-red-500" : "text-green-500"}`}>
-              {itemToView.transactionType.toUpperCase()}
-            </span>
-          </p> */}
           <p className="text-lg font-semibold">
             Remaining Amount: <span className="text-gray-700">₹{itemToView.amount}</span>
           </p>

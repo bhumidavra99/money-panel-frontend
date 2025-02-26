@@ -25,7 +25,7 @@ const SalaryForm = ({
         <div className="modal-content bg-white rounded-lg p-6 w-full mx-4 max-w-2xl md:max-h-[90vh] max-h-[80vh] overflow-y-auto custom-scrollbar relative z-50">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold mb-0">{`${
-              editId ? "Edit" : "Add"
+              editId ? "Pay" : "Add"
             } Salary`}</h2>
             <button
               onClick={onClose}
@@ -38,70 +38,86 @@ const SalaryForm = ({
 
           <form onSubmit={handleSubmit} className="space-y-3">
             <div>
+              <div>
                 <label className="capitalize text-base font-medium text-gray-700">
                   Office Name
                 </label>
-                <Select
-                  name="officeName"
-                  className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#EB8844]"
-                  value={officeNameOptions?.find(
-                    (option) => option.value === values.officeName
-                  )}
-                  onChange={(e) =>
-                    setFieldValue("officeName", e ? e.value : "")
-                  }
-                  options={officeNameOptions}
-                  classNamePrefix="custom-select" 
-                />
+
+                {editId ? (
+                  <input
+                    className={`w-full text-base p-2 rounded-md border border-gray-400 focus:outline-none focus:border-indigo-500 bg-gray-100`}
+                    type="text"
+                    name="officeName"
+                    value={values.officeName}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    disabled
+                    readOnly
+                  />
+                ) : (
+                  <Select
+                    name="officeName"
+                    className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#EB8844]"
+                    value={officeNameOptions?.find(
+                      (option) => option.value === values.officeName
+                    )}
+                    onChange={(e) =>
+                      setFieldValue("officeName", e ? e.value : "")
+                    }
+                    options={officeNameOptions}
+                    classNamePrefix="custom-select"
+                  />
+                )}
+
                 {touched.officeName && errors.officeName && (
                   <div className="text-red-500 text-sm">
                     {errors.officeName}
                   </div>
                 )}
               </div>
-              <div>
-                <label className="capitalize text-base font-medium text-gray-700">
-                 Name
-                </label>
-                <input
-                  className="w-full text-base p-2 rounded-md border border-gray-400 focus:outline-none focus:border-indigo-500"
-                  type="text"
-                  placeholder="Enter Name"
-                  name="name"
-                  value={values.name}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
-                {touched.name && errors.name && (
-                  <div className="text-red-500 text-sm">
-                    {errors.name}
-                  </div>
-                )}
-              </div>
-              <div>
-                <label className="capitalize text-base font-medium text-gray-700">
-                  Amount
-                </label>
-                <input
-                  className="w-full text-base p-2 rounded-md border border-gray-400 focus:outline-none focus:border-indigo-500"
-                  type="number"
-                  placeholder="Enter Amount"
-                  name="amount"
-                  value={values.amount}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  onWheel={(e) => e.target.blur()}
-                  onKeyDown={(e) =>
-                    ["ArrowUp", "ArrowDown"].includes(e.key) &&
-                    e.preventDefault()
-                  }
-                />
-                {touched.amount && errors.amount && (
-                  <div className="text-red-500 text-sm">
-                    {errors.amount}
-                  </div>
-                )}
-              </div>
+            </div>
+            <div>
+              <label className="capitalize text-base font-medium text-gray-700">
+                Name
+              </label>
+              <input
+                className={`w-full text-base p-2 rounded-md border border-gray-400 focus:outline-none focus:border-indigo-500 ${
+                  editId ? "bg-gray-100" : ""
+                }`}
+                type="text"
+                placeholder="Enter Name"
+                name="name"
+                value={values.name}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                disabled={!!editId}
+                readOnly={!!editId}
+              />
+              {touched.name && errors.name && (
+                <div className="text-red-500 text-sm">{errors.name}</div>
+              )}
+            </div>
+            <div>
+              <label className="capitalize text-base font-medium text-gray-700">
+                Amount
+              </label>
+              <input
+                className="w-full text-base p-2 rounded-md border border-gray-400 focus:outline-none focus:border-indigo-500"
+                type="number"
+                placeholder="Enter Amount"
+                name="amount"
+                value={values.amount}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                onWheel={(e) => e.target.blur()}
+                onKeyDown={(e) =>
+                  ["ArrowUp", "ArrowDown"].includes(e.key) && e.preventDefault()
+                }
+              />
+              {touched.amount && errors.amount && (
+                <div className="text-red-500 text-sm">{errors.amount}</div>
+              )}
+            </div>
             <div className="flex items-center justify-center mt-5 gap-5">
               <button
                 type="button"
@@ -124,4 +140,4 @@ const SalaryForm = ({
   );
 };
 
-export default SalaryForm
+export default SalaryForm;

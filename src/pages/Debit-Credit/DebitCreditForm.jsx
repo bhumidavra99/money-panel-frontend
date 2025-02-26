@@ -44,60 +44,68 @@ const DebitCreditForm = ({
                   Customer Name
                 </label>
                 <input
-                  className="w-full text-base p-2 rounded-md border border-gray-400 focus:outline-none focus:border-indigo-500"
+                  className={`w-full text-base p-2 rounded-md border border-gray-400 focus:outline-none focus:border-indigo-500 ${editId ? "bg-gray-100" : ""}`}
                   type="text"
                   placeholder="Enter Customer Name"
                   name="cusName"
                   value={values.cusName}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  disabled={!!editId}
+                  readOnly={!!editId}
                 />
                 {touched.cusName && errors.cusName && (
-                  <div className="text-red-500 text-sm">
-                    {errors.cusName}
-                  </div>
+                  <div className="text-red-500 text-sm">{errors.cusName}</div>
                 )}
               </div>
               <div>
-              <label className="capitalize text-base font-medium text-gray-700">
-              Transaction Type
-              </label>
-              <Select
-                name="transactionType"
-                className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#EB8844]"
-                value={typeOption?.find(
-                  (option) => option.value === values.transactionType
+                <label className="capitalize text-base font-medium text-gray-700">
+                  Transaction Type
+                </label>
+                <Select
+                  name="transactionType"
+                  className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#EB8844]"
+                  value={typeOption?.find(
+                    (option) => option.value === values.transactionType
+                  )}
+                  onChange={(e) =>
+                    setFieldValue("transactionType", e ? e.value : "")
+                  }
+                  options={typeOption}
+                  classNamePrefix="custom-select"
+                />
+                {touched.transactionType && errors.transactionType && (
+                  <div className="text-red-500 text-sm">
+                    {errors.transactionType}
+                  </div>
                 )}
-                onChange={(e) => setFieldValue("transactionType", e ? e.value : "")}
-                options={typeOption}
-                classNamePrefix="custom-select"
-              />
-              {touched.transactionType && errors.transactionType && (
-                <div className="text-red-500 text-sm">{errors.transactionType}</div>
+              </div>
+              {values.transactionType === "credit" && (
+                <div>
+                  <label className="capitalize text-base font-medium text-gray-700">
+                    Account Name
+                  </label>
+                  <Select
+                    name="accountName"
+                    className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#EB8844]"
+                    value={accountOptions?.find(
+                      (option) => option.value === values.accountName
+                    )}
+                    onChange={(e) =>
+                      setFieldValue("accountName", e ? e.value : "")
+                    }
+                    options={accountOptions}
+                    classNamePrefix="custom-select"
+                    maxMenuHeight={140}
+                  />
+                  {touched.accountName && errors.accountName && (
+                    <div className="text-red-500 text-sm">
+                      {errors.accountName}
+                    </div>
+                  )}
+                </div>
               )}
-            </div>
-           {values.transactionType === "credit" &&
-             <div>
-             <label className="capitalize text-base font-medium text-gray-700">
-               Account Name
-             </label>
-             <Select
-               name="accountName"
-               className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#EB8844]"
-               value={accountOptions?.find(
-                 (option) => option.value === values.accountName
-               )}
-               onChange={(e) => setFieldValue("accountName", e ? e.value : "")}
-               options={accountOptions}
-               classNamePrefix="custom-select"
-               maxMenuHeight={140}
-             />
-             {touched.accountName && errors.accountName && (
-               <div className="text-red-500 text-sm">{errors.accountName}</div>
-             )}
-           </div> 
-           } 
-                      <div>
+              <div>
                 <label className="capitalize text-base font-medium text-gray-700">
                   Amount
                 </label>
@@ -116,9 +124,7 @@ const DebitCreditForm = ({
                   }
                 />
                 {touched.amount && errors.amount && (
-                  <div className="text-red-500 text-sm">
-                    {errors.amount}
-                  </div>
+                  <div className="text-red-500 text-sm">{errors.amount}</div>
                 )}
               </div>
             </div>
@@ -144,4 +150,4 @@ const DebitCreditForm = ({
   );
 };
 
-export default DebitCreditForm
+export default DebitCreditForm;

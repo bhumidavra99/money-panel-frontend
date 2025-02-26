@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { FaEdit, FaPlus, FaRegCalendarAlt, FaTrash } from "react-icons/fa";
+import { FaRegCalendarAlt } from "react-icons/fa";
 import Table from "../../common/Table";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import ConfirmationPage from "../../common/ConfirmationPage";
 import Loader from "../../common/Loader";
 import moment from "moment-timezone";
 import { getBetweenAmount } from "../../redux/services/betweenAmountSlice";
@@ -15,7 +14,6 @@ import { BiSearch } from "react-icons/bi";
 import CreditForm from "./creditForm";
 import {
   addCredit,
-  deleteCredit,
   editCredit,
   getCredits,
   getSingleCredit,
@@ -35,8 +33,6 @@ const Credit = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchData, setSearchData] = useState("");
   const [pageLoading, setPageLoading] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState(null);
-  const [confirm, setConfirm] = useState(false);
   const [toggle, setToggle] = useState(false);
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
@@ -52,7 +48,6 @@ const Credit = () => {
     accountName: Yup.string().required("Account Name is required"),
     amount: Yup.string().required("Amount is required"),
   });
-  const today = moment().tz("Asia/Kolkata").format("YYYY-MM-DD");
   const getAllCredits = useCallback(
     async (selectedStartDate, selectedEndDate) => {
       setPageLoading(true);
@@ -77,7 +72,7 @@ const Credit = () => {
         setPageLoading(false);
       }
     },
-    [dispatch, savedStartDate, savedEndDate, today, searchData]
+    [dispatch, savedStartDate, savedEndDate, searchData]
   );
   useEffect(() => {
     getAllCredits();
@@ -156,32 +151,6 @@ const Credit = () => {
         accessor: "amount",
         Cell: ({ value }) => (value ? value : "-"),
       },
-      // {
-      //   Header: "Action",
-      //   Cell: ({ row }) => (
-      //     <div className="flex items-center justify-center gap-4">
-      //       <button
-      //         className="text-blue-500 hover:text-blue-700"
-      //         onClick={() => {
-      //           setModelOpen(true);
-      //           setEditId(row?.original?._id);
-      //         }}
-      //       >
-      //         <FaEdit size={16} />
-      //       </button>
-
-      //       <button
-      //         className="text-red-500 hover:text-red-700"
-      //         onClick={() => {
-      //           setItemToDelete(row.original?._id);
-      //           setConfirm(true);
-      //         }}
-      //       >
-      //         <FaTrash size={16} />
-      //       </button>
-      //     </div>
-      //   ),
-      // },
     ],
     []
   );
@@ -231,18 +200,6 @@ const Credit = () => {
     setSavedStartDate("");
     setSavedEndDate("");
   };
-  const deleteCreditData = async (row) => {
-    try {
-      const response = await dispatch(deleteCredit(itemToDelete));
-      toast.success(response?.payload?.message, {
-        autoClose: 2000,
-        pauseOnHover: false,
-      });
-      dispatch(getBetweenAmount());
-      setConfirm(false);
-      getAllCredits();
-    } catch (error) {}
-  };
   useEffect(() => {
     if (editId) {
       const fetchSingleCredit = async () => {
@@ -255,13 +212,13 @@ const Credit = () => {
     }
   }, [dispatch, editId]);
   useEffect(() => {
-      dispatch(getAccounts());
-    }, [dispatch]);
-    const accountOptions = getAllAccountData?.map((item) => ({
-        value: item.accountName,
-        label: item.accountName,
-      }))
-    
+    dispatch(getAccounts());
+  }, [dispatch]);
+  const accountOptions = getAllAccountData?.map((item) => ({
+    value: item.accountName,
+    label: item.accountName,
+  }));
+
   if (pageLoading) {
     return <Loader />;
   }
@@ -290,14 +247,16 @@ const Credit = () => {
           </button>
         </div>
         <div className="flex flex-wrap justify-end items-center gap-2 rounded-lg text-center mt-3 md:mt-0">
-        <div className="inline-flex items-center space-x-2 rounded-lg  text-center">
-          <p className="font-semibold text-lg">
-            Total Balance :
-            <span className="ms-2">
-              {getAllCreditData?.totalAmount?.toString().includes(".") ? Number(getAllCreditData?.totalAmount).toFixed(2) : getAllCreditData?.totalAmount}
-            </span>
-          </p>
-        </div>
+          <div className="inline-flex items-center space-x-2 rounded-lg  text-center">
+            <p className="font-semibold text-lg">
+              Total Balance :
+              <span className="ms-2">
+                {getAllCreditData?.totalAmount?.toString().includes(".")
+                  ? Number(getAllCreditData?.totalAmount).toFixed(2)
+                  : getAllCreditData?.totalAmount}
+              </span>
+            </p>
+          </div>
           {savedStartDate && savedEndDate && (
             <button
               onClick={handleClearDates}
@@ -325,13 +284,6 @@ const Credit = () => {
               </>
             )}
           </button>
-          {/* <button
-            className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
-            onClick={() => setModelOpen(true)}
-          >
-            <FaPlus className="font-bold text-white w-4 h-4" />
-            <p className="font-semibold">Add New Record</p>
-          </button> */}
         </div>
       </div>
       <Table data={data} columns={columns} />
@@ -348,14 +300,6 @@ const Credit = () => {
             setToggle(false);
             handleClearDates();
           }}
-        />
-      )}
-      {confirm && (
-        <ConfirmationPage
-          topicName="Debit"
-          confirm={confirm}
-          onDelete={deleteCreditData}
-          onCancel={() => setConfirm(false)}
         />
       )}
       {modelOpen && (

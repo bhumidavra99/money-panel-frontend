@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { FaPlus, FaEdit, FaTrash, FaRegCalendarAlt } from "react-icons/fa";
+import { FaPlus, FaTrash, FaRegCalendarAlt } from "react-icons/fa";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
@@ -17,6 +17,9 @@ import {
 import moment from "moment-timezone";
 import { convertIstToUtc } from "../../common/TimeUtils";
 import DateFilter from "../../common/DateFilter";
+import { getTotalBalance } from "../../redux/services/balanceSlice";
+import { IoEye } from "react-icons/io5";
+import WithdrawalViewModel from "./WithdrawalViewModel";
 
 const Withdrawal = ({ withdrawalsData }) => {
   const dispatch = useDispatch();
@@ -30,6 +33,8 @@ const Withdrawal = ({ withdrawalsData }) => {
   const [endDate, setEndDate] = useState();
   const [savedStartDate, setSavedStartDate] = useState(null);
   const [savedEndDate, setSavedEndDate] = useState(null);
+  const [itemToView, setItemToView] = useState(null);
+  const [viewModel, setViewModel] = useState(false);
   const getSingleWithdrawalData = useSelector(
     (state) => state.withdrawal.singleWithdrawalData
   );
@@ -47,20 +52,19 @@ const Withdrawal = ({ withdrawalsData }) => {
       Cell: ({ value }) =>
         value?.toString().includes(".") ? Number(value).toFixed(2) : value,
     },
-
     {
       Header: "Action",
       Cell: ({ row }) => (
         <div className="flex items-center justify-center gap-4">
-          <button
-            className="text-blue-500 hover:text-blue-700"
-            onClick={() => {
-              setModelOpen(true);
-              setEditId(row.original._id);
-            }}
-          >
-            <FaEdit size={16} />
-          </button>
+         <button
+              className="inline-flex items-center space-x-2 rounded-lg px-4 py-1 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
+              onClick={() => {
+                setModelOpen(true);
+                setEditId(row?.original?._id);
+              }}
+            >
+              Payout 
+            </button>
           <button
             className="text-red-500 hover:text-red-700"
             onClick={() => {
@@ -69,6 +73,15 @@ const Withdrawal = ({ withdrawalsData }) => {
             }}
           >
             <FaTrash size={16} />
+          </button>
+          <button
+            className="text-blue-500 hover:text-blue-700"
+            onClick={() => {
+              setItemToView(row.original);
+              setViewModel(true);
+            }}
+          >
+            <IoEye size={20} />
           </button>
         </div>
       ),
@@ -133,6 +146,7 @@ const Withdrawal = ({ withdrawalsData }) => {
         response = await dispatch(addWithdrawal(payload));
       }
       if (response?.payload?.status === 200) {
+        dispatch(getTotalBalance());
         toast.success(response?.payload?.message, { autoClose: 2000 });
         setLoading(false);
         setModelOpen(false);
@@ -191,7 +205,6 @@ const Withdrawal = ({ withdrawalsData }) => {
     if (getSingleWithdrawalData) {
       setValues({
         name: getSingleWithdrawalData?.name,
-        amount: getSingleWithdrawalData?.amount,
       });
     }
   }, [getSingleWithdrawalData, setValues]);
@@ -257,7 +270,10 @@ const Withdrawal = ({ withdrawalsData }) => {
             )}
           </button>
           <button
-            onClick={() => setModelOpen(true)}
+            onClick={() => {
+              setEditId(null);
+              setModelOpen(true);
+            }}
             className="bg-[#EB8844] text-white flex items-center space-x-2 rounded-lg px-4 py-2"
           >
             <FaPlus className="font-bold text-white w-4 h-4" />
@@ -266,6 +282,14 @@ const Withdrawal = ({ withdrawalsData }) => {
         </div>
       </div>
       <Table data={data} columns={columns} />
+      {viewModel && (
+        <WithdrawalViewModel
+          itemToView={itemToView}
+          onClose={() => {
+            setViewModel(false);
+          }}
+        />
+      )}
       {toggle && (
         <DateFilter
           setToggle={setToggle}

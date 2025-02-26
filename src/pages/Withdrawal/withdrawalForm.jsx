@@ -39,13 +39,17 @@ const WithdrawalForm = ({
                  Name
                 </label>
                 <input
-                  className="w-full text-base p-2 rounded-md border border-gray-400 focus:outline-none focus:border-indigo-500"
+                  className={`w-full text-base p-2 rounded-md border border-gray-400 focus:outline-none focus:border-indigo-500 ${
+                    editId ? "bg-gray-100" : ""
+                  }`}
                   type="text"
                   placeholder="Enter Name"
                   name="name"
                   value={values.name}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  disabled={!!editId}
+                  readOnly={!!editId}
                 />
                 {touched.name && errors.name && (
                   <div className="text-red-500 text-sm">

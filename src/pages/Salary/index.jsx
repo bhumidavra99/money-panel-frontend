@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect } from "react";
-import { FaEdit, FaPlus, FaRegCalendarAlt, FaTrash } from "react-icons/fa";
+import { FaPlus, FaRegCalendarAlt, FaTrash } from "react-icons/fa";
 import "react-datepicker/dist/react-datepicker.css";
 import ConfirmationPage from "../../common/ConfirmationPage";
 import { useFormik } from "formik";
@@ -19,6 +19,9 @@ import { getOffices } from "../../redux/services/officeSlice";
 import moment from "moment-timezone";
 import { convertIstToUtc } from "../../common/TimeUtils";
 import DateFilter from "../../common/DateFilter";
+import { getTotalBalance } from "../../redux/services/balanceSlice";
+import { IoEye } from "react-icons/io5";
+import SalaryViewModel from "./salaryViewModel";
 
 const Salaries = ({ getAllSalariesData }) => {
   const dispatch = useDispatch();
@@ -36,6 +39,8 @@ const Salaries = ({ getAllSalariesData }) => {
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   const [toggle, setToggle] = useState(false);
+  const [itemToView, setItemToView] = useState(null);
+  const [viewModel, setViewModel] = useState(false);
   const today = moment().tz("Asia/Kolkata").format("YYYY-MM-DD");
   useEffect(() => {
     dispatch(getOffices());
@@ -73,13 +78,13 @@ const Salaries = ({ getAllSalariesData }) => {
         Cell: ({ row }) => (
           <div className="flex items-center justify-center gap-4">
             <button
-              className="text-blue-500 hover:text-blue-700"
+              className="inline-flex items-center space-x-2 rounded-lg px-4 py-1 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
               onClick={() => {
                 setModelOpen(true);
                 setEditId(row?.original?._id);
               }}
             >
-              <FaEdit size={16} />
+              Pay
             </button>
             <button
               className="text-red-500 hover:text-red-700"
@@ -89,6 +94,15 @@ const Salaries = ({ getAllSalariesData }) => {
               }}
             >
               <FaTrash size={16} />
+            </button>
+            <button
+              className="text-blue-500 hover:text-blue-700"
+              onClick={() => {
+                setItemToView(row.original);
+                setViewModel(true);
+              }}
+            >
+              <IoEye size={20} />
             </button>
           </div>
         ),
@@ -183,6 +197,7 @@ const Salaries = ({ getAllSalariesData }) => {
         response = await dispatch(addSalary(payload));
       }
       if (response?.payload?.status === 200) {
+        dispatch(getTotalBalance());
         toast.success(response?.payload?.message, {
           autoClose: 2000,
           pauseOnHover: false,
@@ -216,9 +231,8 @@ const Salaries = ({ getAllSalariesData }) => {
   useEffect(() => {
     if (getSingleSalaryData) {
       setValues({
-        date: getSingleSalaryData?.date,
+        officeName: getSingleSalaryData?.officeName,
         name: getSingleSalaryData?.name,
-        amount: getSingleSalaryData?.amount,
       });
     }
   }, [getSingleSalaryData, setValues]);
@@ -290,7 +304,10 @@ const Salaries = ({ getAllSalariesData }) => {
           </button>
           <button
             className="inline-flex items-center space-x-2 rounded-lg px-2 py-2 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
-            onClick={() => setModelOpen(true)}
+            onClick={() => {
+              setEditId(null);
+              setModelOpen(true);
+            }}
           >
             <FaPlus className="font-bold text-white w-4 h-4" />
             <p className="font-semibold">Add New Salary</p>
@@ -298,6 +315,14 @@ const Salaries = ({ getAllSalariesData }) => {
         </div>
       </div>
       <Table data={data} columns={columns} />
+      {viewModel && (
+        <SalaryViewModel
+          itemToView={itemToView}
+          onClose={() => {
+            setViewModel(false);
+          }}
+        />
+      )}
       {toggle && (
         <DateFilter
           setToggle={setToggle}

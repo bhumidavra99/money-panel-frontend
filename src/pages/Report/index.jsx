@@ -26,7 +26,6 @@ import { getBetweenAmount } from "../../redux/services/betweenAmountSlice";
 import Table from "../../common/Table";
 
 const Report = () => {
-
   const dispatch = useDispatch();
   const today = moment().tz("Asia/Kolkata").format("YYYY-MM-DD");
   const limitOptions = [
@@ -179,12 +178,16 @@ const Report = () => {
       {
         Header: "P Portal",
         accessor: "paymentPortal",
-        Cell: ({ value }) => (value ? value : "-"),
+        Cell: ({ value }) =>  Array.isArray(value) && value.length > 0
+        ? value.map((portal) => portal.portalName).join(" / ")
+        : "-",
       },
       {
         Header: "S Portal",
         accessor: "swipePortal",
-        Cell: ({ value }) => (value ? value : "-"),
+        Cell: ({ value }) => Array.isArray(value) && value.length > 0
+        ? value.map((portal) => portal.portalName).join(" / ")
+        : "-",
       },
 
       {
@@ -202,9 +205,9 @@ const Report = () => {
         accessor: "chargeType",
         Cell: ({ value }) => {
           if (value && Array.isArray(value)) {
-            return value.map(item => item.accName).join(" / ");
+            return value.map((item) => item.accName).join(" / ");
           }
-          return "-"; 
+          return "-";
         },
       },
       {
@@ -220,7 +223,8 @@ const Report = () => {
       {
         Header: "Profit",
         accessor: "profit",
-        Cell: ({ value }) =>  value?.toString().includes(".") ? Number(value).toFixed(2) : value,
+        Cell: ({ value }) =>
+          value?.toString().includes(".") ? Number(value).toFixed(2) : value,
       },
       {
         Header: "Status",
@@ -498,7 +502,7 @@ const Report = () => {
             )}
             onChange={(e) => setFilterValue(e ? e.value : "")}
             options={statusOptions}
-            classNamePrefix="custom-select" 
+            classNamePrefix="custom-select"
           />
         </div>
         <div className="flex gap-4 flex-wrap ">
@@ -559,9 +563,9 @@ const Report = () => {
         data={data}
         columns={columns}
         pageCount={pageCount}
-        limitOptions={limitOptions} 
+        limitOptions={limitOptions}
         pageLimit={pageLimit}
-setPage={setPage}
+        setPage={setPage}
         setPageLimit={setPageLimit}
         isPagination={true}
       />
