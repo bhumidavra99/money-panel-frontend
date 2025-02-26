@@ -41,7 +41,6 @@ const Salaries = ({ getAllSalariesData }) => {
   const [toggle, setToggle] = useState(false);
   const [itemToView, setItemToView] = useState(null);
   const [viewModel, setViewModel] = useState(false);
-  const today = moment().tz("Asia/Kolkata").format("YYYY-MM-DD");
   useEffect(() => {
     dispatch(getOffices());
   }, [dispatch]);
@@ -127,43 +126,34 @@ const Salaries = ({ getAllSalariesData }) => {
           getSalaries({
             startDate:
               selectedStartDate ||
-              (savedStartDate && convertIstToUtc(savedStartDate)) ||
-              convertIstToUtc(
-                moment(today).startOf("day").tz("Asia/Kolkata").format()
-              ),
+              (savedStartDate && convertIstToUtc(savedStartDate)),
             endDate:
               selectedEndDate ||
-              (savedEndDate && convertIstToUtc(savedEndDate)) ||
-              convertIstToUtc(
-                moment(today).endOf("day").tz("Asia/Kolkata").format()
-              ),
+              (savedEndDate && convertIstToUtc(savedEndDate))
           })
         );
       } catch (error) {}
     },
-    [dispatch, savedEndDate, savedStartDate, today]
+    [dispatch, savedEndDate, savedStartDate]
   );
 
   useEffect(() => {
     getAllSalaries();
   }, [getAllSalaries]);
   const handleDateSubmit = () => {
-    const adjustedStartDate = moment(startDate)
-      .startOf("day")
-      .tz("Asia/Kolkata")
-      .format();
-    const adjustedEndDate = moment(endDate)
-      .endOf("day")
-      .tz("Asia/Kolkata")
-      .format();
-    setStartDate(adjustedStartDate);
-    setEndDate(adjustedEndDate);
-    const SDate = adjustedStartDate ? convertIstToUtc(adjustedStartDate) : null;
-    const EDate = adjustedEndDate ? convertIstToUtc(adjustedEndDate) : null;
-    setToggle(false);
-    if (SDate && EDate) {
-      setToggle(false);
-      getAllSalaries(SDate, EDate);
+     if (startDate) {
+          startDate.setHours(0, 0, 0, 0);
+        }
+        if (endDate) {
+          endDate.setHours(23, 59, 59, 999);
+        }
+        const SDate = startDate ? convertIstToUtc(startDate) : null;
+        const EDate = endDate ? convertIstToUtc(endDate) : null;
+        if (SDate && EDate) {
+          setToggle(false);
+          getAllSalaries(SDate, EDate);
+          setStartDate(null);
+          setEndDate(null);
     } else {
       getAllSalaries();
     }
@@ -236,7 +226,6 @@ const Salaries = ({ getAllSalariesData }) => {
       });
     }
   }, [getSingleSalaryData, setValues]);
-
   const deleteSalaryData = async () => {
     try {
       const response = await dispatch(deleteSalary(itemToDelete));

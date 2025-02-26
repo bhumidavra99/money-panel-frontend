@@ -90,7 +90,6 @@ const Withdrawal = ({ withdrawalsData }) => {
   const data = useMemo(() => {
     return withdrawalsData?.data || [];
   }, [withdrawalsData]);
-  const today = moment().tz("Asia/Kolkata").format("YYYY-MM-DD");
   const getAllWithdrawals = useCallback(
     async (selectedStartDate, selectedEndDate) => {
       try {
@@ -98,21 +97,15 @@ const Withdrawal = ({ withdrawalsData }) => {
           getWithdrawals({
             startDate:
               selectedStartDate ||
-              (savedStartDate && convertIstToUtc(savedStartDate)) ||
-              convertIstToUtc(
-                moment(today).startOf("day").tz("Asia/Kolkata").format()
-              ),
+              (savedStartDate && convertIstToUtc(savedStartDate)),
             endDate:
               selectedEndDate ||
-              (savedEndDate && convertIstToUtc(savedEndDate)) ||
-              convertIstToUtc(
-                moment(today).endOf("day").tz("Asia/Kolkata").format()
-              ),
+              (savedEndDate && convertIstToUtc(savedEndDate))
           })
         );
       } catch (error) {}
     },
-    [dispatch, today, savedEndDate, savedStartDate]
+    [dispatch,savedEndDate, savedStartDate]
   );
 
   useEffect(() => {

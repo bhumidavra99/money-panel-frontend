@@ -16,7 +16,7 @@ const Table = ({
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data }, useSortBy);
   return (
-    <div className="overflow-x-auto bg-white rounded-lg shadow-md mt-3">
+    <div className="overflow-x-auto bg-white rounded-lg shadow-md my-3">
       <table
         {...getTableProps()}
         className="min-w-full bg-white border-collapse"
