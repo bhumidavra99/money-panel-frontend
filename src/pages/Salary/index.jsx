@@ -22,6 +22,7 @@ import DateFilter from "../../common/DateFilter";
 import { getTotalBalance } from "../../redux/services/balanceSlice";
 import { IoEye } from "react-icons/io5";
 import SalaryViewModel from "./salaryViewModel";
+import { getAccounts } from "../../redux/services/accountSlice";
 
 const Salaries = ({ getAllSalariesData }) => {
   const dispatch = useDispatch();
@@ -41,6 +42,7 @@ const Salaries = ({ getAllSalariesData }) => {
   const [toggle, setToggle] = useState(false);
   const [itemToView, setItemToView] = useState(null);
   const [viewModel, setViewModel] = useState(false);
+  const getAllAccountData = useSelector((state) => state.account.accountData);
   useEffect(() => {
     dispatch(getOffices());
   }, [dispatch]);
@@ -113,11 +115,17 @@ const Salaries = ({ getAllSalariesData }) => {
     () => getAllSalariesData.data || [],
     [getAllSalariesData]
   );
-  const initialValues = { officeName: "", name: "", amount: "" };
+  useEffect(() => {
+      if (modelOpen === true) {
+        dispatch(getAccounts());
+      }
+    }, [dispatch, modelOpen]);
+  const initialValues = { officeName: "", name: "", amount: "", accountName: ""};
   const validationSchema = Yup.object({
     officeName: Yup.string().required("Office Name is required"),
     name: Yup.string().required("Name is required"),
     amount: Yup.number().required("Amount is required"),
+    accountName: Yup.string().required("AccountName is required"),
   });
   const getAllSalaries = useCallback(
     async (selectedStartDate, selectedEndDate) => {
@@ -223,6 +231,8 @@ const Salaries = ({ getAllSalariesData }) => {
       setValues({
         officeName: getSingleSalaryData?.officeName,
         name: getSingleSalaryData?.name,
+        accountName: getSingleSalaryData?.accountName,
+
       });
     }
   }, [getSingleSalaryData, setValues]);
@@ -251,6 +261,10 @@ const Salaries = ({ getAllSalariesData }) => {
   const officeNameOptions = getAllOfficesData?.map((item) => ({
     value: item.officeName,
     label: item.officeName,
+  }));
+  const accountOptions = getAllAccountData?.map((item) => ({
+    value: item.accountName,
+    label: item.accountName,
   }));
   return (
     <>
@@ -347,6 +361,7 @@ const Salaries = ({ getAllSalariesData }) => {
           values={values}
           handleChange={handleChange}
           officeNameOptions={officeNameOptions}
+          accountOptions={accountOptions}
           editId={editId}
           handleBlur={handleBlur}
           setFieldValue={setFieldValue}

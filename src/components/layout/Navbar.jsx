@@ -13,6 +13,7 @@ import {
 } from "../../redux/services/betweenAmountSlice";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import profileImg from "../../assests/profileImg.png"
 
 const Navbar = ({ toggleSidebar }) => {
   const getAmountData = useSelector((state) => state.betweenAmount.amountData);
@@ -124,7 +125,7 @@ const Navbar = ({ toggleSidebar }) => {
               >
                 <span className="h-12 w-12 rounded-full flex justify-center items-center">
                   <img
-                    src="https://s3-alpha-sig.figma.com/img/bf65/1592/ebc94499279c5c921aece1dff7654551?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=XA6vRM-76onImFd-mJumJbheNv1O0Gr~sNOC4tQMYPNxcW5kTb9n9rnEqKU3k3aZWlsmH8wJmszmjUhKOSMJt~ltBhgXZ-JJsiXZQBlJPGC~~azARNqSS6kek3IQfCpZ9IYF9JpnubMSPcGIHnVwPbN5gQ40uLmr2r~jXuQzd~N1ScYl166nl1aJQwKAgA2~7HaDcthEBaonYup2-kYQ0ys2kk1eLhxAKYe5vKp2eEwxcFEIkSK9Vmc8t7MPjRI-zOvtVfABrtAz7fermmemFBf1JQGIRZ9GiLASsQbEamcDJD0qSMznDVBH6tzWxUKbS-VDQtTvqxRJBSfhyskcgA__"
+                    src={profileImg}
                     alt=""
                     className="w-full h-full rounded-full object-cover"
                   />

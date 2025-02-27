@@ -51,13 +51,7 @@ const DebitCreditPage = () => {
     cusName: Yup.string().required("Customer Name  is required"),
     amount: Yup.string().required("Total Amount is required"),
     transactionType: Yup.string().required("Transaction Type  is required"),
-    accountName: Yup.string().when("$transactionType", {
-      is: "credit",
-      then: Yup.string().required(
-        "Account Name is required for credit transactions"
-      ),
-      otherwise: Yup.string().notRequired(),
-    }),
+    accountName: Yup.string().required("Account Name is required"),
   });
 
   const getAllDebits = useCallback(async () => {

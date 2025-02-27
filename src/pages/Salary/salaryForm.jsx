@@ -9,6 +9,7 @@ const SalaryForm = ({
   officeNameOptions,
   handleChange,
   handleBlur,
+  accountOptions,
   editId,
   errors,
   touched,
@@ -37,12 +38,11 @@ const SalaryForm = ({
           <hr className="my-3" />
 
           <form onSubmit={handleSubmit} className="space-y-3">
-            <div>
+          
               <div>
                 <label className="capitalize text-base font-medium text-gray-700">
                   Office Name
                 </label>
-
                 {editId ? (
                   <input
                     className={`w-full text-base p-2 rounded-md border border-gray-400 focus:outline-none focus:border-indigo-500 bg-gray-100`}
@@ -75,7 +75,29 @@ const SalaryForm = ({
                   </div>
                 )}
               </div>
-            </div>
+              <div>
+                  <label className="capitalize text-base font-medium text-gray-700">
+                    Account Name
+                  </label>
+                  <Select
+                    name="accountName"
+                    className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#EB8844]"
+                    value={accountOptions?.find(
+                      (option) => option.value === values.accountName
+                    )}
+                    onChange={(e) =>
+                      setFieldValue("accountName", e ? e.value : "")
+                    }
+                    options={accountOptions}
+                    classNamePrefix="custom-select"
+                    maxMenuHeight={140}
+                  />
+                  {touched.accountName && errors.accountName && (
+                    <div className="text-red-500 text-sm">
+                      {errors.accountName}
+                    </div>
+                  )}
+                </div>
             <div>
               <label className="capitalize text-base font-medium text-gray-700">
                 Name

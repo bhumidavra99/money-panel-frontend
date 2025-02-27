@@ -36,7 +36,6 @@ const DebitCreditForm = ({
             </button>
           </div>
           <hr className="my-3" />
-
           <form onSubmit={handleSubmit}>
             <div className="space-y-5 w-full gap-4">
               <div>
@@ -80,7 +79,6 @@ const DebitCreditForm = ({
                   </div>
                 )}
               </div>
-              {values.transactionType === "credit" && (
                 <div>
                   <label className="capitalize text-base font-medium text-gray-700">
                     Account Name
@@ -104,7 +102,6 @@ const DebitCreditForm = ({
                     </div>
                   )}
                 </div>
-              )}
               <div>
                 <label className="capitalize text-base font-medium text-gray-700">
                   Amount

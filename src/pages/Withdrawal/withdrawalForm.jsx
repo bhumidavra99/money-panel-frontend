@@ -1,5 +1,6 @@
 import React from "react";
 import { TfiClose } from "react-icons/tfi";
+import Select from "react-select";
 
 const WithdrawalForm = ({
   onClose,
@@ -7,6 +8,9 @@ const WithdrawalForm = ({
   handleChange,
   handleBlur,
   editId,
+  typeOption,
+  setFieldValue,
+  accountOptions,
   errors,
   touched,
   handleSubmit,
@@ -57,6 +61,51 @@ const WithdrawalForm = ({
                   </div>
                 )}
               </div>
+              <div>
+                <label className="capitalize text-base font-medium text-gray-700">
+                  Transaction Type
+                </label>
+                <Select
+                  name="transactionType"
+                  className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#EB8844]"
+                  value={typeOption?.find(
+                    (option) => option.value === values.transactionType
+                  )}
+                  onChange={(e) =>
+                    setFieldValue("transactionType", e ? e.value : "")
+                  }
+                  options={typeOption}
+                  classNamePrefix="custom-select"
+                />
+                {touched.transactionType && errors.transactionType && (
+                  <div className="text-red-500 text-sm">
+                    {errors.transactionType}
+                  </div>
+                )}
+              </div>
+              <div>
+                  <label className="capitalize text-base font-medium text-gray-700">
+                    Account Name
+                  </label>
+                  <Select
+                    name="accountName"
+                    className="w-full text-base mt-1 h-[40px] rounded-md focus:border-[#EB8844]"
+                    value={accountOptions?.find(
+                      (option) => option.value === values.accountName
+                    )}
+                    onChange={(e) =>
+                      setFieldValue("accountName", e ? e.value : "")
+                    }
+                    options={accountOptions}
+                    classNamePrefix="custom-select"
+                    maxMenuHeight={140}
+                  />
+                  {touched.accountName && errors.accountName && (
+                    <div className="text-red-500 text-sm">
+                      {errors.accountName}
+                    </div>
+                  )}
+                </div>
               <div>
                 <label className="capitalize text-base font-medium text-gray-700">
                   Amount

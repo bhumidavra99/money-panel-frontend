@@ -20,6 +20,7 @@ import DateFilter from "../../common/DateFilter";
 import { getTotalBalance } from "../../redux/services/balanceSlice";
 import { IoEye } from "react-icons/io5";
 import WithdrawalViewModel from "./WithdrawalViewModel";
+import { getAccounts } from "../../redux/services/accountSlice";
 
 const Withdrawal = ({ withdrawalsData }) => {
   const dispatch = useDispatch();
@@ -35,6 +36,8 @@ const Withdrawal = ({ withdrawalsData }) => {
   const [savedEndDate, setSavedEndDate] = useState(null);
   const [itemToView, setItemToView] = useState(null);
   const [viewModel, setViewModel] = useState(false);
+  const [debitValue, setDebitValue] = useState();
+  const getAllAccountData = useSelector((state) => state.account.accountData);
   const getSingleWithdrawalData = useSelector(
     (state) => state.withdrawal.singleWithdrawalData
   );
@@ -56,19 +59,30 @@ const Withdrawal = ({ withdrawalsData }) => {
       Header: "Action",
       Cell: ({ row }) => (
         <div className="flex items-center justify-center gap-4">
-         <button
-              className="inline-flex items-center space-x-2 rounded-lg px-4 py-1 text-md text-center text-white bg-[#EB8844] hover:bg-opacity-90"
-              onClick={() => {
-                setModelOpen(true);
-                setEditId(row?.original?._id);
-              }}
-            >
-              Payout 
-            </button>
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700 transition duration-200"
+            onClick={() => {
+              setModelOpen(true);
+              setEditId(row?.original?._id);
+              setDebitValue("debit");
+            }}
+          >
+            Debit
+          </button>
+          <button
+            className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-700 transition duration-200"
+            onClick={() => {
+              setModelOpen(true);
+              setEditId(row?.original?._id);
+              setDebitValue("credit");
+            }}
+          >
+            Credit
+          </button>
           <button
             className="text-red-500 hover:text-red-700"
             onClick={() => {
-              setItemToDelete(row.original._id);
+              setItemToDelete(row.original?._id);
               setConfirm(true);
             }}
           >
@@ -90,6 +104,11 @@ const Withdrawal = ({ withdrawalsData }) => {
   const data = useMemo(() => {
     return withdrawalsData?.data || [];
   }, [withdrawalsData]);
+  useEffect(() => {
+    if (modelOpen === true) {
+      dispatch(getAccounts());
+    }
+  }, [dispatch, modelOpen]);
   const getAllWithdrawals = useCallback(
     async (selectedStartDate, selectedEndDate) => {
       try {
@@ -100,12 +119,12 @@ const Withdrawal = ({ withdrawalsData }) => {
               (savedStartDate && convertIstToUtc(savedStartDate)),
             endDate:
               selectedEndDate ||
-              (savedEndDate && convertIstToUtc(savedEndDate))
+              (savedEndDate && convertIstToUtc(savedEndDate)),
           })
         );
       } catch (error) {}
     },
-    [dispatch,savedEndDate, savedStartDate]
+    [dispatch, savedEndDate, savedStartDate]
   );
 
   useEffect(() => {
@@ -122,10 +141,17 @@ const Withdrawal = ({ withdrawalsData }) => {
       }
     } catch (error) {}
   };
-  const initialValues = { amount: "", name: "" };
+  const initialValues = {
+    amount: "",
+    name: "",
+    transactionType: "",
+    accountName: "",
+  };
   const validationSchema = Yup.object({
     amount: Yup.number().required("Amount is required"),
     name: Yup.string().required("Name is required"),
+    transactionType: Yup.string().required("TransactionType is required"),
+    accountName: Yup.string().required("AccountName is required"),
   });
   const onSubmit = async (values) => {
     setLoading(true);
@@ -156,6 +182,7 @@ const Withdrawal = ({ withdrawalsData }) => {
     touched,
     handleChange,
     setValues,
+    setFieldValue,
     handleBlur,
     handleSubmit,
     resetForm,
@@ -198,9 +225,11 @@ const Withdrawal = ({ withdrawalsData }) => {
     if (getSingleWithdrawalData) {
       setValues({
         name: getSingleWithdrawalData?.name,
+        transactionType: debitValue,
+        accountName: getSingleWithdrawalData?.accountName,
       });
     }
-  }, [getSingleWithdrawalData, setValues]);
+  }, [getSingleWithdrawalData, setValues, debitValue]);
 
   const handleSaveDate = () => {
     setToggle(false);
@@ -219,7 +248,14 @@ const Withdrawal = ({ withdrawalsData }) => {
     setSavedStartDate("");
     setSavedEndDate("");
   };
-
+  const accountOptions = getAllAccountData?.map((item) => ({
+    value: item.accountName,
+    label: item.accountName,
+  }));
+  const typeOption = [
+    { value: "debit", label: "Debit" },
+    { value: "credit", label: "Credit" },
+  ];
   return (
     <>
       <div className="flex justify-between items-center gap-4">
@@ -315,7 +351,10 @@ const Withdrawal = ({ withdrawalsData }) => {
             resetForm();
             setEditId(null);
           }}
+          typeOption={typeOption}
+          setFieldValue={setFieldValue}
           values={values}
+          accountOptions={accountOptions}
           handleChange={handleChange}
           editId={editId}
           handleBlur={handleBlur}

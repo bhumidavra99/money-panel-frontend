@@ -172,49 +172,6 @@ const CustomerForm = ({ action }) => {
       setFieldValue("chargeInRupees", calculatedCharge);
     }
   }, [values.swipeAmount, values.chargeInPer, setFieldValue]);
-  // useEffect(() => {
-  //   if (values.swipePortal.length === 0) {
-  //     setFieldValue("swipePortal", []);
-  //   } else {
-  //     const updatedSwipePortal = values.swipePortal.map((portal) => {
-  //       const amount = parseFloat(portal.amount) || 0;
-  //       const cardChargeInRupees = parseFloat(portal.cardChargeInRupees) || 0;
-  //       const netSwipeAmount = amount - cardChargeInRupees;
-        
-  //       // Update the portal object with the calculated netSwipeAmount
-  //       return { ...portal, netSwipeAmount };
-  //     });
-      
-  //     setFieldValue("swipePortal", updatedSwipePortal);
-  //   }
-  // }, [values.swipePortal, setFieldValue]);
-  
-
-  // useEffect(() => {
-  //   if (values.swipeAmount === "" || values.cardChargeInRupees === "") {
-  //     setFieldValue("netSwipeAmount", "");
-  //   } else if (values.swipeAmount || values.cardChargeInRupees) {
-  //     const netSwipeAmount =
-  //       parseFloat(values.swipeAmount) - parseFloat(values.cardChargeInRupees);
-  //     setFieldValue("netSwipeAmount", netSwipeAmount);
-  //   }
-  // }, [values.swipeAmount, values.cardChargeInRupees, setFieldValue]);
-  // useEffect(() => {
-  //   if (values.swipePortal.length === 0) {
-  //     setFieldValue("swipePortal", []);
-  //   } else {
-  //     const updatedSwipePortal = values.swipePortal.map((portal) => {
-  //       const amount = parseFloat(portal.amount) || 0;
-  //       const cardChargeInRupees = parseFloat(portal.cardChargeInRupees) || 0;
-  //       const netSwipeAmount = amount - cardChargeInRupees;
-        
-  //       return { ...portal, netSwipeAmount };
-  //     });
-      
-  //     setFieldValue("swipePortal", updatedSwipePortal);
-  //   }
-  // }, [values.swipePortal, setFieldValue]);
-  
   useEffect(() => {
     const chargeInRupees = parseFloat(values.chargeInRupees) || 0;
     const extraCharge = parseFloat(values.extraCharge) || 0;
@@ -259,6 +216,57 @@ const CustomerForm = ({ action }) => {
     { value: "success", label: "Success" },
     { value: "failed", label: "Failed" },
   ];
+   useEffect(() => {
+      if (getSingleCustomerData && customerId) {
+        setValues({
+          customerName: getSingleCustomerData?.customerName
+            ? getSingleCustomerData?.customerName
+            : "",
+          officeName: getSingleCustomerData?.officeName
+            ? getSingleCustomerData?.officeName
+            : "",
+          cardNumber: getSingleCustomerData?.cardNumber
+            ? getSingleCustomerData?.cardNumber
+            : "",
+          bankName: getSingleCustomerData?.bankName
+            ? getSingleCustomerData?.bankName
+            : "",
+          billAmount: getSingleCustomerData?.billAmount
+            ? getSingleCustomerData?.billAmount
+            : "",
+          swipeAmount: getSingleCustomerData?.swipeAmount
+            ? getSingleCustomerData?.swipeAmount
+            : "",
+          paymentPortal: getSingleCustomerData?.paymentPortal || [],
+          swipePortal: getSingleCustomerData?.swipePortal || [],
+          chargeType: getSingleCustomerData?.chargeType || [],
+          chargeCardType: getSingleCustomerData?.chargeCardType
+            ? getSingleCustomerData?.chargeCardType
+            : "",
+          chargeInPer: getSingleCustomerData?.chargeInPer
+            ? getSingleCustomerData?.chargeInPer
+            : "",
+          chargeInRupees: getSingleCustomerData?.chargeInRupees
+            ? getSingleCustomerData?.chargeInRupees
+            : "",
+          extraCharge: getSingleCustomerData?.extraCharge
+            ? getSingleCustomerData?.extraCharge
+            : "",
+          cardChargeInPer: getSingleCustomerData?.cardChargeInPer
+            ? getSingleCustomerData?.cardChargeInPer
+            : "",
+          cardChargeInRupees: getSingleCustomerData?.cardChargeInRupees
+            ? getSingleCustomerData?.cardChargeInRupees
+            : "",
+          profit: getSingleCustomerData?.profit
+            ? getSingleCustomerData?.profit
+            : "",
+          status: getSingleCustomerData?.status
+            ? getSingleCustomerData?.status
+            : "",
+        });
+      }
+    }, [getSingleCustomerData, customerId, setValues]);
   useEffect(() => {
     if (customerId) {
       const fetchSingleCustomer = async () => {
@@ -292,7 +300,7 @@ const CustomerForm = ({ action }) => {
   };
   const handleInputChange = (account, value) => {
     const updatedChargeType = values.chargeType.map((item) =>
-      item.accName === account ? { ...item, amount: value } : item
+      item.accName === account ? { ...item, amount: Number(value) } : item
     );
     setValues({
       ...values,
@@ -308,14 +316,13 @@ const CustomerForm = ({ action }) => {
 
           if (existingPortal) return existingPortal;
 
-          // Structure data differently based on portalType
           return portalType === "paymentPortal"
-            ? { portalName: option.value, amount: "" }
+            ? { portalName: option.value, amount: undefined }
             : {
                 portalName: option.value,
-                amount: "",
-                cardChargeInRupees: "",
-                cardChargeInPer: "",
+                amount: undefined,
+                cardChargeInRupees: undefined,
+                cardChargeInPer: undefined,
               };
         })
       : [];
@@ -326,28 +333,17 @@ const CustomerForm = ({ action }) => {
   };
   const handlePortalInputChange = (portalName, value, portalType, field) => {
     const updatedPortals = values[portalType].map((item) =>
-      item.portalName === portalName ? { ...item, [field]: value } : item
+      item.portalName === portalName ? { ...item, [field]:  Number(value) } : item
     );
     const totalPaymentAmount =
-      portalType === "paymentPortal"
-        ? updatedPortals.reduce(
-            (sum, portal) => sum + (parseFloat(portal.amount) || 0),
-            0
-          )
-        : values.paymentPortal.reduce(
-            (sum, portal) => sum + (parseFloat(portal.amount) || 0),
-            0
-          );
-    const totalSwipeAmount =
-      portalType === "swipePortal"
-        ? updatedPortals.reduce(
-            (sum, portal) => sum + (parseFloat(portal.amount) || 0),
-            0
-          )
-        : values.swipePortal.reduce(
-            (sum, portal) => sum + (parseFloat(portal.amount) || 0),
-            0
-          );
+    portalType === "paymentPortal"
+      ? updatedPortals.reduce((sum, portal) => sum + (portal.amount || 0), 0)
+      : values.paymentPortal.reduce((sum, portal) => sum + (portal.amount || 0), 0);
+
+  const totalSwipeAmount =
+    portalType === "swipePortal"
+      ? updatedPortals.reduce((sum, portal) => sum + (portal.amount || 0), 0)
+      : values.swipePortal.reduce((sum, portal) => sum + (portal.amount || 0), 0);
     setValues({
       ...values,
       [portalType]: updatedPortals,
@@ -845,107 +841,3 @@ const CustomerForm = ({ action }) => {
 };
 
 export default CustomerForm;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useEffect, useState } from "react";
-// import { useFormik } from "formik";
-// import * as Yup from "yup";
-// import { useLocation, useNavigate } from "react-router-dom";
-// import { toast } from "react-toastify";
-// import { useDispatch, useSelector } from "react-redux";
-// import {
-//   addReport,
-//   editReport,
-//   getSingleReport,
-// } from "../../redux/services/reportSlice";
-// import { getOffices } from "../../redux/services/officeSlice";
-// import { getPortals } from "../../redux/services/portalSlice";
-// import { getAccounts } from "../../redux/services/accountSlice";
-// import { getBetweenAmount } from "../../redux/services/betweenAmountSlice";
-// import CustomerFormFields from "./CustomerFormFields";
-// import useCustomerFormLogic from "./useCustomerFormLogic";
-
-// const CustomerForm = ({ action }) => {
-//   const dispatch = useDispatch();
-//   const navigate = useNavigate();
-//   const location = useLocation();
-//   const queryParams = new URLSearchParams(location.search);
-//   const customerId = queryParams.get("customerId");
-
-//   const { initialValues, validationSchema, onSubmit } = useCustomerFormLogic({
-//     customerId,
-//     dispatch,
-//     navigate,
-//   });
-
-//   const {
-//     values,
-//     errors,
-//     touched,
-//     handleChange,
-//     handleBlur,
-//     handleSubmit,
-//     setFieldValue,
-//     setValues,
-//     resetForm,
-//   } = useFormik({
-//     initialValues,
-//     validationSchema,
-//     onSubmit,
-//   });
-
-//   useEffect(() => {
-//     dispatch(getAccounts());
-//     dispatch(getOffices());
-//     dispatch(getPortals());
-//   }, [dispatch]);
-
-//   useEffect(() => {
-//     if (customerId) {
-//       const fetchSingleCustomer = async () => {
-//         try {
-//           await dispatch(getSingleReport(customerId));
-//         } catch (error) {}
-//       };
-//       fetchSingleCustomer();
-//     }
-//   }, [dispatch, customerId]);
-
-//   return (
-//     <div>
-//       <section className="bg-white rounded-lg border-2 border-slate-300 font-sans duration-300 ease-in-out md:m-4 m-2">
-//         <div className="p-4 space-y-4 lg:px-6">
-//           <p className="md:text-2xl text-2xl tracking-tight font-semibold text-gray-900 capitalize">
-//             {action} Customer
-//           </p>
-//           <hr />
-//           <CustomerFormFields
-//             values={values}
-//             errors={errors}
-//             touched={touched}
-//             handleChange={handleChange}
-//             handleBlur={handleBlur}
-//             handleSubmit={handleSubmit}
-//             setFieldValue={setFieldValue}
-//             setValues={setValues}
-//             resetForm={resetForm}
-//           />
-//         </div>
-//       </section>
-//     </div>
-//   );
-// };
-
-// export default CustomerForm;

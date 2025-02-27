@@ -1,6 +1,6 @@
 import React from "react";
 import { TfiClose } from "react-icons/tfi";
-import moment from "moment";
+import { convertUtcToIstDateOnly } from "../../common/TimeUtils";
 
 const ViewModel = ({ itemToView, onClose }) => {
   if (!itemToView) return null;
@@ -29,7 +29,7 @@ const ViewModel = ({ itemToView, onClose }) => {
             <ul className="list-disc pl-5 mt-2">
               {itemToView.debitRecords.map((debit) => (
                 <li key={debit._id} className="text-gray-700 mt-1">
-                  <span className="font-medium">Date:</span> {moment(debit.createdAt).format("DD/MM/YYYY")} | 
+                  <span className="font-medium">Date:</span>{convertUtcToIstDateOnly(debit.createdAt)} | 
                   <span className="font-medium"> Amount:</span> ₹{debit.amount}
                 </li>
               ))}
@@ -43,7 +43,7 @@ const ViewModel = ({ itemToView, onClose }) => {
             <ul className="list-disc pl-5 mt-2">
               {itemToView.creditRecords.map((credit) => (
                 <li key={credit._id} className="text-gray-700 mt-1">
-                  <span className="font-medium">Date:</span> {moment(credit.createdAt).format("DD/MM/YYYY")} | 
+                  <span className="font-medium">Date:</span>{convertUtcToIstDateOnly(credit.createdAt)}| 
                   <span className="font-medium"> Amount:</span> ₹{credit.amount}
                 </li>
               ))}
