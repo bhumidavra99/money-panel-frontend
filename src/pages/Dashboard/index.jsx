@@ -215,7 +215,7 @@ const Dashboard = () => {
               {chartsData && <Bar data={chartsData} options={chartOptions} />}
             </div>
           </div>
-          <h2 className="text-2xl font-bold mt-6">Profit</h2>
+          {/* <h2 className="text-2xl font-bold mt-6">Profit</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-x-7 gap-x-4 gap-y-4 mb-8 mt-2">
             <div className="flex items-center gap-6 bg-white border border-[#DBE0E6] rounded-lg py-4 px-8">
@@ -272,7 +272,7 @@ const Dashboard = () => {
                 <Bar data={profitChartsData} options={chartOptions} />
               )}
             </div>
-          </div>
+          </div> */}
           {toggle && (
             <DateFilter
               setToggle={setToggle}
